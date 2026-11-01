@@ -7,7 +7,877 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Cash Tracker - Personal Finance & Net Worth Tracker</title>
-  <link rel="stylesheet" href="css/app.css">
+  <style>
+/* ==========================================================================
+   Cash Tracker - Personal Finance Design System & Stylesheet
+   Fully Responsive for Desktop, Tablet & Mobile (iOS / Android optimized)
+   ========================================================================== */
+
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Light Palette */
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-sidebar: #0f172a;
+  --sidebar-text: #e2e8f0;
+  --sidebar-muted: #94a3b8;
+  --sidebar-active-bg: #1e293b;
+  --sidebar-active-text: #38bdf8;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+  
+  --primary: #059669; /* Emerald */
+  --primary-hover: #047857;
+  --primary-light: #ecfdf5;
+  --primary-border: #a7f3d0;
+  
+  --income: #10b981;
+  --income-bg: #ecfdf5;
+  --income-border: #a7f3d0;
+  
+  --expense: #f43f5e;
+  --expense-bg: #fff1f2;
+  --expense-border: #fecdd3;
+  
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  
+  --info: #0284c7;
+  --info-bg: #f0f9ff;
+  --info-border: #bae6fd;
+  
+  --purple: #8b5cf6;
+  --purple-bg: #f5f3ff;
+  --purple-border: #ddd6fe;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+  --bottom-bar-height: 64px;
+}
+
+[data-theme="dark"] {
+  --bg-app: #090d16;
+  --bg-card: #131b2e;
+  --bg-card-hover: #1e293b;
+  --bg-sidebar: #060911;
+  --sidebar-text: #f1f5f9;
+  --sidebar-muted: #64748b;
+  --sidebar-active-bg: #1e293b;
+  --sidebar-active-text: #34d399;
+  
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+  
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-light: rgba(16, 185, 129, 0.12);
+  --primary-border: rgba(16, 185, 129, 0.25);
+  
+  --income: #34d399;
+  --income-bg: rgba(52, 211, 153, 0.12);
+  --income-border: rgba(52, 211, 153, 0.25);
+  
+  --expense: #fb7185;
+  --expense-bg: rgba(251, 113, 133, 0.12);
+  --expense-border: rgba(251, 113, 133, 0.25);
+  
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.12);
+  --warning-border: rgba(251, 191, 36, 0.25);
+  
+  --info: #38bdf8;
+  --info-bg: rgba(56, 189, 248, 0.12);
+  --info-border: rgba(56, 189, 248, 0.25);
+  
+  --purple: #a78bfa;
+  --purple-bg: rgba(167, 139, 250, 0.12);
+  --purple-border: rgba(167, 139, 250, 0.25);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
+/* Container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar (Desktop) */
+.app-sidebar {
+  width: 260px;
+  background-color: var(--bg-sidebar);
+  color: var(--sidebar-text);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  z-index: 60;
+}
+
+.sidebar-header {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+}
+
+.nav-menu {
+  padding: 0.85rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-group-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sidebar-muted);
+  padding: 0.65rem 0.75rem 0.25rem 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-active-bg);
+  color: #ffffff;
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-active-bg);
+  color: #10b981;
+  font-weight: 600;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 3.5px;
+  background-color: #10b981;
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background-color: #ef4444;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Main Content */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--bg-app);
+}
+
+/* Top Navbar */
+.top-navbar {
+  height: 62px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.page-title-box {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.page-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Due Reminder Banner */
+.due-reminder-banner {
+  background: linear-gradient(90deg, #fff1f2 0%, #fffbeb 100%);
+  border-bottom: 1px solid #fecdd3;
+  padding: 0.55rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.825rem;
+  color: #9f1239;
+  font-weight: 500;
+  gap: 0.75rem;
+}
+
+[data-theme="dark"] .due-reminder-banner {
+  background: linear-gradient(90deg, rgba(244, 63, 94, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+  border-bottom: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fda4af;
+}
+
+/* Body Content */
+.content-body {
+  padding: 1.25rem;
+  flex: 1;
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Stat Card */
+.stat-card {
+  padding: 1rem 1.15rem;
+  border-radius: 0.875rem;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-label {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  margin-top: 0.1rem;
+}
+
+.stat-subtext {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  outline: none;
+  min-height: 38px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-card);
+  border-color: var(--border-strong);
+  color: var(--text-main);
+}
+.btn-secondary:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.btn-danger {
+  background-color: var(--expense);
+  color: #ffffff;
+}
+.btn-danger:hover {
+  background-color: #e11d48;
+}
+
+.btn-outline-danger {
+  background-color: transparent;
+  border-color: var(--expense);
+  color: var(--expense);
+}
+.btn-outline-danger:hover {
+  background-color: var(--expense-bg);
+}
+
+.btn-success {
+  background-color: var(--income);
+  color: #ffffff;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  min-height: 32px;
+}
+
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-strong);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-height: 40px;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+/* Tables */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.custom-table th {
+  padding: 0.75rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.725rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: rgba(0,0,0,0.015);
+}
+
+.custom-table td {
+  padding: 0.8rem 0.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:hover {
+  background-color: var(--bg-card-hover);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.badge-income {
+  background-color: var(--income-bg);
+  color: var(--income);
+  border: 1px solid var(--income-border);
+}
+
+.badge-expense {
+  background-color: var(--expense-bg);
+  color: var(--expense);
+  border: 1px solid var(--expense-border);
+}
+
+.badge-warning {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
+}
+
+.badge-info {
+  background-color: var(--info-bg);
+  color: var(--info);
+  border: 1px solid var(--info-border);
+}
+
+.badge-purple {
+  background-color: var(--purple-bg);
+  color: var(--purple);
+  border: 1px solid var(--purple-border);
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: 1rem;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--shadow-xl);
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-backdrop.active .modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  background-color: rgba(0,0,0,0.01);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 5.5rem; /* Above mobile bottom bar */
+  right: 1.25rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 0.65rem;
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 280px;
+  max-width: 380px;
+  font-size: 0.85rem;
+  pointer-events: auto;
+}
+
+.toast-success { border-left: 4px solid var(--income); }
+.toast-error { border-left: 4px solid var(--expense); }
+.toast-warning { border-left: 4px solid var(--warning); }
+.toast-info { border-left: 4px solid var(--info); }
+
+/* ==========================================================================
+   MOBILE BOTTOM NAVIGATION & FLOATING ACTION BUTTON (FAB)
+   ========================================================================== */
+
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-bar-height);
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  z-index: 50;
+  padding: 0 0.5rem;
+}
+
+.mobile-nav-items {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.mobile-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  position: relative;
+  flex: 1;
+}
+
+.mobile-nav-link.active {
+  color: var(--primary);
+}
+
+.mobile-nav-badge {
+  position: absolute;
+  top: 4px;
+  right: 18px;
+  background-color: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 999px;
+  line-height: 1.1;
+}
+
+/* Mobile Quick Floating Action Button (FAB) */
+.mobile-fab {
+  display: none;
+  position: fixed;
+  bottom: calc(var(--bottom-bar-height) + 14px);
+  right: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.45);
+  align-items: center;
+  justify-content: center;
+  z-index: 45;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.mobile-fab:active {
+  transform: scale(0.92);
+}
+
+.mobile-toggle {
+  display: none;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (Mobile < 768px & Small Mobile < 480px)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -270px;
+  }
+  .app-sidebar.open {
+    transform: translateX(270px);
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.4);
+  }
+  .mobile-toggle {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Show Mobile Bottom Navigation */
+  .mobile-bottom-nav {
+    display: block;
+  }
+  .mobile-fab {
+    display: flex;
+  }
+
+  /* Give space at bottom so navigation doesn't overlap content */
+  .content-body {
+    padding: 0.85rem;
+    padding-bottom: 5.5rem;
+  }
+
+  /* Make header compact on mobile */
+  .top-navbar {
+    height: 56px;
+    padding: 0 0.85rem;
+  }
+  .page-title {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
+  }
+
+  /* Modals on mobile: Bottom Sheet Style */
+  .modal-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-dialog {
+    max-width: 100%;
+    border-radius: 1.25rem 1.25rem 0 0;
+    max-height: 85vh;
+    transform: translateY(100%);
+    box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
+  }
+
+  .modal-backdrop.active .modal-dialog {
+    transform: translateY(0);
+  }
+
+  /* Compact stat cards */
+  .stat-card {
+    padding: 0.85rem 1rem;
+  }
+  .stat-value {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-actions .btn span:not([data-icon]) {
+    display: none; /* Hide button text, keep icons on tiny screens */
+  }
+  .navbar-actions .btn {
+    padding: 0.4rem 0.55rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .app-sidebar, .top-navbar, .mobile-bottom-nav, .mobile-fab, .due-reminder-banner, .btn, .no-print {
+    display: none !important;
+  }
+  .app-main { margin: 0 !important; padding: 0 !important; }
+  .content-body { padding: 0 !important; max-width: 100% !important; }
+}
+
+</style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1307,16 +2177,3231 @@
 </div>
 
 <!-- ================= SCRIPTS ================= -->
-<script src="js/icons.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/accounts.js"></script>
-<script src="js/transactions.js"></script>
-<script src="js/debts.js"></script>
-<script src="js/balance_sheet.js"></script>
-<script src="js/reminders.js"></script>
-<script src="js/calculator.js"></script>
-<script src="js/app.js"></script>
+<script>
+
+// --- icons.js ---
+// Cash Tracker - Icons Library (Self-contained SVG icons, Lucide-style, 100% offline)
+const AppIcons = {
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  'trending-up': '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  'trending-down': '<polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>',
+  'arrow-down-left': '<line x1="17" y1="7" x2="7" y2="17"/><polyline points="17 17 7 17 7 7"/>',
+  'arrow-up-right': '<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>',
+  'arrow-left-right': '<polyline points="17 11 21 7 17 3"/><line x1="21" y1="7" x2="9" y2="7"/><polyline points="7 21 3 17 7 13"/><line x1="15" y1="17" x2="3" y2="17"/>',
+  scale: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  package: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  'credit-card': '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
+  calculator: '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  'bell-ring': '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M22 8c0-2.3-.8-4.3-2-6"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+  edit: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  'alert-circle': '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  'alert-triangle': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  printer: '<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  'chevron-right': '<polyline points="9 18 15 12 9 6"/>',
+  'chevron-left': '<polyline points="15 18 9 12 15 6"/>',
+  'refresh-cw': '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  building: '<rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>',
+  landmark: '<line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  piechart: '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
+  barchart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  sparkles: '<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>',
+  info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+};
+
+function icon(name, className = 'w-5 h-5', size = 20) {
+  const inner = AppIcons[name] || AppIcons['info'];
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}">${inner}</svg>`;
+}
+
+function renderAllIcons(context = document) {
+  context.querySelectorAll('[data-icon]').forEach(el => {
+    const iconName = el.getAttribute('data-icon');
+    const iconClass = el.getAttribute('data-icon-class') || 'w-5 h-5';
+    const iconSize = parseInt(el.getAttribute('data-icon-size') || '20', 10);
+    el.innerHTML = icon(iconName, iconClass, iconSize);
+  });
+}
+
+
+// --- storage.js ---
+// ==========================================================================
+// Cash Tracker - Storage Engine & Database Management (Personal Finance Edition)
+// Persistent via localStorage with realistic personal finance data
+// ==========================================================================
+
+const DB_KEY = 'cashtracker_personal_v3';
+
+const DEFAULT_ACCOUNTS = [
+  { id: 'acc_1', name: 'Dompet Tunai (Cash)', type: 'cash', initialBalance: 1250000, color: '#10b981' },
+  { id: 'acc_2', name: 'BCA Rekening Utama (Gaji)', type: 'bank', initialBalance: 16800000, color: '#0284c7' },
+  { id: 'acc_3', name: 'Bank Jago / Mandiri (Tabungan)', type: 'bank', initialBalance: 24500000, color: '#f59e0b' },
+  { id: 'acc_4', name: 'GoPay & OVO (Harian)', type: 'ewallet', initialBalance: 650000, color: '#8b5cf6' }
+];
+
+const DEFAULT_INCOME_CATEGORIES = [
+  'Gaji Pokok & Tunjangan',
+  'Bonus, THR & Insentif',
+  'Freelance & Side Hustle',
+  'Dividen & Return Investasi',
+  'Pendapatan Pasif & Sewa',
+  'Uang Masuk / Hadiah Lainnya'
+];
+
+const DEFAULT_EXPENSE_CATEGORIES = [
+  'Makan & Minum Harian',
+  'Belanja Bulanan & Kebutuhan Rumah',
+  'Tagihan Rutin (Listrik, Air, Wifi, Pulsa)',
+  'Transportasi & Bensin (Tol, Ojol, Servis)',
+  'Cicilan & Bayar Hutang (KPR, Kendaraan, Kartu Kredit, Paylater)',
+  'Hiburan, Nongkrong & Langganan (Netflix, Bioskop, Hobi)',
+  'Kesehatan, Medis, BPJS & Skincare',
+  'Donasi, Zakat & Kasih Orang Tua',
+  'Belanja Pribadi, Pakaian & Gadget',
+  'Pengeluaran Lain-lain'
+];
+
+function getDateOffset(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+const DEFAULT_PERSONAL_ASSETS = [
+  { id: 'ast_1', name: 'Rumah Tinggal Pribadi', category: 'Properti', purchaseValue: 450000000, currentValue: 520000000, purchaseDate: '2023-01-15', notes: 'Sertifikat Hak Milik (SHM)' },
+  { id: 'ast_2', name: 'Mobil Honda HR-V 2022', category: 'Kendaraan', purchaseValue: 285000000, currentValue: 250000000, purchaseDate: '2022-08-10', notes: 'Kendaraan keluarga' },
+  { id: 'ast_3', name: 'Motor Honda Vario 160', category: 'Kendaraan', purchaseValue: 26000000, currentValue: 21000000, purchaseDate: '2023-03-20', notes: 'Transportasi harian' },
+  { id: 'ast_4', name: 'Emas Batangan Logam Mulia Antam (30 gram)', category: 'Investasi Jangka Panjang', purchaseValue: 31000000, currentValue: 42000000, purchaseDate: '2023-02-12', notes: 'Disimpan di Safe Deposit Box' },
+  { id: 'ast_5', name: 'Portofolio Reksadana & Saham', category: 'Investasi Likuid', purchaseValue: 18000000, currentValue: 22500000, purchaseDate: '2023-05-18', notes: 'Investasi pasar modal' },
+  { id: 'ast_6', name: 'Laptop MacBook Pro & iPhone', category: 'Elektronik & Alat', purchaseValue: 28000000, currentValue: 20000000, purchaseDate: '2023-10-15', notes: 'Peralatan kerja & pribadi' }
+];
+
+const DEFAULT_RECEIVABLES = [
+  { id: 'rcv_1', debtorName: 'Pinjaman Teman (Reza Pratama)', amount: 2500000, dueDate: getDateOffset(15), notes: 'Pinjam keperluan mendadak', status: 'unpaid' }
+];
+
+const DEFAULT_DEBTS = [
+  {
+    id: 'dbt_1',
+    creditorName: 'KPR Rumah Bank Mandiri',
+    category: 'Jangka Panjang',
+    totalLoan: 350000000,
+    remainingAmount: 245000000,
+    interestRate: 7.2,
+    monthlyPayment: 3250000,
+    dueDayOfMonth: 10,
+    status: 'active',
+    notes: 'Tenor sisa 8 tahun'
+  },
+  {
+    id: 'dbt_2',
+    creditorName: 'Cicilan Mobil BCA Finance',
+    category: 'Jangka Panjang',
+    totalLoan: 120000000,
+    remainingAmount: 42000000,
+    interestRate: 6.0,
+    monthlyPayment: 2950000,
+    dueDayOfMonth: 15,
+    status: 'active',
+    notes: 'Sisa 14 bulan cicilan'
+  },
+  {
+    id: 'dbt_3',
+    creditorName: 'Kartu Kredit BCA Everyday',
+    category: 'Jangka Pendek',
+    totalLoan: 5000000,
+    remainingAmount: 2350000,
+    interestRate: 1.75,
+    monthlyPayment: 1000000,
+    dueDayOfMonth: 20,
+    status: 'active',
+    notes: 'Belanja kebutuhan bulanan'
+  },
+  {
+    id: 'dbt_4',
+    creditorName: 'ShopeePayLater / GoPayLater',
+    category: 'Jangka Pendek',
+    totalLoan: 1800000,
+    remainingAmount: 850000,
+    interestRate: 2.0,
+    monthlyPayment: 850000,
+    dueDayOfMonth: 5,
+    status: 'active',
+    notes: 'Cicilan 3 bulan gadget & fashion'
+  }
+];
+
+const DEFAULT_REMINDERS = [
+  {
+    id: 'rem_1',
+    title: 'Tagihan Listrik PLN Pascabayar',
+    amount: 850000,
+    dueDate: getDateOffset(2), // H-2 (Mendekati jatuh tempo)
+    frequency: 'monthly',
+    category: 'Tagihan Rutin (Listrik, Air, Wifi, Pulsa)',
+    accountId: 'acc_2',
+    isPaid: false,
+    notes: 'ID Pel: 53120098412'
+  },
+  {
+    id: 'rem_2',
+    title: 'Internet Wi-Fi Rumah 100 Mbps',
+    amount: 425000,
+    dueDate: getDateOffset(5), // H-5
+    frequency: 'monthly',
+    category: 'Tagihan Rutin (Listrik, Air, Wifi, Pulsa)',
+    accountId: 'acc_2',
+    isPaid: false,
+    notes: 'Nomor Pelanggan: 1224859102'
+  },
+  {
+    id: 'rem_3',
+    title: 'Cicilan KPR Rumah Mandiri',
+    amount: 3250000,
+    dueDate: getDateOffset(10),
+    frequency: 'monthly',
+    category: 'Cicilan & Bayar Hutang (KPR, Kendaraan, Kartu Kredit, Paylater)',
+    accountId: 'acc_2',
+    isPaid: false,
+    notes: 'Auto-debet Bank Mandiri'
+  },
+  {
+    id: 'rem_4',
+    title: 'Cicilan Mobil BCA Finance',
+    amount: 2950000,
+    dueDate: getDateOffset(-1), // Kemarin (Overdue!)
+    frequency: 'monthly',
+    category: 'Cicilan & Bayar Hutang (KPR, Kendaraan, Kartu Kredit, Paylater)',
+    accountId: 'acc_2',
+    isPaid: false,
+    notes: 'Kontrak: BCA-2022-7718'
+  },
+  {
+    id: 'rem_5',
+    title: 'BPJS Kesehatan Mandiri Sekeluarga',
+    amount: 450000,
+    dueDate: getDateOffset(8),
+    frequency: 'monthly',
+    category: 'Kesehatan, Medis, BPJS & Skincare',
+    accountId: 'acc_2',
+    isPaid: false,
+    notes: 'Kelas 1'
+  }
+];
+
+const DEFAULT_SAVINGS_GOALS = [
+  {
+    id: 'gl_1',
+    title: 'Dana Darurat 6 Bulan Pengeluaran',
+    targetAmount: 50000000,
+    currentAmount: 24500000,
+    deadlineDate: getDateOffset(180),
+    monthlyContribution: 3500000,
+    category: 'Dana Darurat',
+    notes: 'Tersimpan di Bank Jago & Reksadana Pasar Uang'
+  },
+  {
+    id: 'gl_2',
+    title: 'Liburan Akhir Tahun Sekeluarga',
+    targetAmount: 18000000,
+    currentAmount: 11000000,
+    deadlineDate: getDateOffset(90),
+    monthlyContribution: 2000000,
+    category: 'Liburan & Impian',
+    notes: 'Tiket & akomodasi liburan'
+  },
+  {
+    id: 'gl_3',
+    title: 'Upgrade Tabungan Investasi Masa Depan',
+    targetAmount: 100000000,
+    currentAmount: 42000000,
+    deadlineDate: getDateOffset(360),
+    monthlyContribution: 4000000,
+    category: 'Investasi Jangka Panjang',
+    notes: 'Emas Antam & Reksadana Saham'
+  }
+];
+
+const DEFAULT_TRANSACTIONS = [
+  {
+    id: 'trx_1',
+    type: 'income',
+    date: getDateOffset(-10),
+    amount: 17500000,
+    category: 'Gaji Pokok & Tunjangan',
+    accountId: 'acc_2',
+    notes: 'Gaji bulanan kantor'
+  },
+  {
+    id: 'trx_2',
+    type: 'income',
+    date: getDateOffset(-4),
+    amount: 3800000,
+    category: 'Freelance & Side Hustle',
+    accountId: 'acc_2',
+    notes: 'Proyek freelance sampingan'
+  },
+  {
+    id: 'trx_3',
+    type: 'expense',
+    date: getDateOffset(-8),
+    amount: 1450000,
+    category: 'Belanja Bulanan & Kebutuhan Rumah',
+    accountId: 'acc_2',
+    notes: 'Belanja sembako & perlengkapan rumah'
+  },
+  {
+    id: 'trx_4',
+    type: 'expense',
+    date: getDateOffset(-6),
+    amount: 450000,
+    category: 'Transportasi & Bensin (Tol, Ojol, Servis)',
+    accountId: 'acc_1',
+    notes: 'Isi bensin Pertamax & saldo e-Toll'
+  },
+  {
+    id: 'trx_5',
+    type: 'expense',
+    date: getDateOffset(-3),
+    amount: 350000,
+    category: 'Hiburan, Nongkrong & Langganan (Netflix, Bioskop, Hobi)',
+    accountId: 'acc_4',
+    notes: 'Makan akhir pekan & nonton bioskop'
+  },
+  {
+    id: 'trx_6',
+    type: 'expense',
+    date: getDateOffset(-1),
+    amount: 1500000,
+    category: 'Donasi, Zakat & Kasih Orang Tua',
+    accountId: 'acc_2',
+    notes: 'Transfer bulanan orang tua'
+  }
+];
+
+class CashTrackerStorage {
+  constructor() {
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      const raw = localStorage.getItem(DB_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        parsed.accounts = parsed.accounts || DEFAULT_ACCOUNTS;
+        parsed.incomeCategories = parsed.incomeCategories || DEFAULT_INCOME_CATEGORIES;
+        parsed.expenseCategories = parsed.expenseCategories || DEFAULT_EXPENSE_CATEGORIES;
+        parsed.transactions = parsed.transactions || DEFAULT_TRANSACTIONS;
+        parsed.fixedAssets = parsed.fixedAssets || DEFAULT_PERSONAL_ASSETS;
+        parsed.receivables = parsed.receivables || DEFAULT_RECEIVABLES;
+        parsed.debts = parsed.debts || DEFAULT_DEBTS;
+        parsed.reminders = parsed.reminders || DEFAULT_REMINDERS;
+        parsed.savingsGoals = parsed.savingsGoals || DEFAULT_SAVINGS_GOALS;
+        parsed.settings = parsed.settings || { theme: 'light', userName: 'Keuangan Pribadi Saya' };
+        return parsed;
+      }
+    } catch (e) {
+      console.error('Error loading database, resetting', e);
+    }
+    return this.createInitialData();
+  }
+
+  createInitialData() {
+    const initial = {
+      version: 3,
+      createdAt: new Date().toISOString(),
+      accounts: JSON.parse(JSON.stringify(DEFAULT_ACCOUNTS)),
+      incomeCategories: [...DEFAULT_INCOME_CATEGORIES],
+      expenseCategories: [...DEFAULT_EXPENSE_CATEGORIES],
+      transactions: JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS)),
+      fixedAssets: JSON.parse(JSON.stringify(DEFAULT_PERSONAL_ASSETS)),
+      receivables: JSON.parse(JSON.stringify(DEFAULT_RECEIVABLES)),
+      debts: JSON.parse(JSON.stringify(DEFAULT_DEBTS)),
+      reminders: JSON.parse(JSON.stringify(DEFAULT_REMINDERS)),
+      savingsGoals: JSON.parse(JSON.stringify(DEFAULT_SAVINGS_GOALS)),
+      settings: {
+        theme: 'light',
+        userName: 'Keuangan Pribadi Saya'
+      }
+    };
+    this.save(initial);
+    return initial;
+  }
+
+  save(customData = null) {
+    if (customData) this.data = customData;
+    localStorage.setItem(DB_KEY, JSON.stringify(this.data));
+  }
+
+  reset() {
+    localStorage.removeItem(DB_KEY);
+    this.data = this.createInitialData();
+    return this.data;
+  }
+
+  // Formatters
+  static formatRupiah(amount, withPrefix = true) {
+    const val = Math.round(Number(amount) || 0);
+    const formatted = val.toLocaleString('id-ID');
+    return withPrefix ? `Rp ${formatted}` : formatted;
+  }
+
+  static parseRupiah(str) {
+    if (typeof str === 'number') return str;
+    if (!str) return 0;
+    const cleaned = String(str).replace(/[^0-9-]/g, '');
+    return parseInt(cleaned, 10) || 0;
+  }
+
+  static formatDateID(dateStr) {
+    if (!dateStr) return '-';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  // Financial calculations
+  getCalculatedAccounts() {
+    const accounts = this.data.accounts.map(acc => ({
+      ...acc,
+      currentBalance: Number(acc.initialBalance || 0)
+    }));
+
+    (this.data.transactions || []).forEach(tx => {
+      const acc = accounts.find(a => a.id === tx.accountId);
+      if (acc) {
+        if (tx.type === 'income') acc.currentBalance += Number(tx.amount || 0);
+        else if (tx.type === 'expense') acc.currentBalance -= Number(tx.amount || 0);
+      }
+      if (tx.type === 'transfer') {
+        const fromAcc = accounts.find(a => a.id === tx.fromAccountId);
+        const toAcc = accounts.find(a => a.id === tx.toAccountId);
+        if (fromAcc) fromAcc.currentBalance -= Number(tx.amount || 0);
+        if (toAcc) toAcc.currentBalance += Number(tx.amount || 0);
+      }
+    });
+
+    return accounts;
+  }
+
+  getTotalCashAndBank() {
+    const accounts = this.getCalculatedAccounts();
+    return accounts.reduce((sum, acc) => sum + acc.currentBalance, 0);
+  }
+
+  getTotalReceivables() {
+    return (this.data.receivables || [])
+      .filter(r => r.status !== 'paid')
+      .reduce((sum, r) => sum + Number(r.amount || 0), 0);
+  }
+
+  getTotalCurrentAssets() {
+    return this.getTotalCashAndBank() + this.getTotalReceivables();
+  }
+
+  getTotalFixedAssets() {
+    return (this.data.fixedAssets || []).reduce((sum, a) => sum + Number(a.currentValue || a.purchaseValue || 0), 0);
+  }
+
+  getTotalAssets() {
+    return this.getTotalCurrentAssets() + this.getTotalFixedAssets();
+  }
+
+  getTotalShortTermDebts() {
+    return (this.data.debts || [])
+      .filter(d => d.category === 'Jangka Pendek' && d.status === 'active')
+      .reduce((sum, d) => sum + Number(d.remainingAmount || 0), 0);
+  }
+
+  getTotalLongTermDebts() {
+    return (this.data.debts || [])
+      .filter(d => d.category === 'Jangka Panjang' && d.status === 'active')
+      .reduce((sum, d) => sum + Number(d.remainingAmount || 0), 0);
+  }
+
+  getTotalDebts() {
+    return this.getTotalShortTermDebts() + this.getTotalLongTermDebts();
+  }
+
+  getNetWorth() {
+    return this.getTotalAssets() - this.getTotalDebts();
+  }
+
+  getMonthlyStats(year = new Date().getFullYear(), month = new Date().getMonth() + 1) {
+    const paddedMonth = String(month).padStart(2, '0');
+    const prefix = `${year}-${paddedMonth}`;
+
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    (this.data.transactions || []).forEach(tx => {
+      if (tx.date && tx.date.startsWith(prefix)) {
+        if (tx.type === 'income') totalIncome += Number(tx.amount || 0);
+        if (tx.type === 'expense') totalExpense += Number(tx.amount || 0);
+      }
+    });
+
+    return {
+      year,
+      month,
+      totalIncome,
+      totalExpense,
+      netCashflow: totalIncome - totalExpense
+    };
+  }
+
+  exportToJSON() {
+    const jsonStr = JSON.stringify(this.data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cash_tracker_pribadi_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  importFromJSON(jsonText) {
+    try {
+      const parsed = JSON.parse(jsonText);
+      if (!parsed.transactions || !parsed.accounts) {
+        throw new Error('Format data backup tidak valid!');
+      }
+      this.data = parsed;
+      this.save();
+      return true;
+    } catch (e) {
+      alert('Gagal memulihkan file: ' + e.message);
+      return false;
+    }
+  }
+
+  exportTransactionsCSV() {
+    const txs = this.data.transactions || [];
+    const accounts = this.getCalculatedAccounts();
+    const accMap = {};
+    accounts.forEach(a => { accMap[a.id] = a.name; });
+
+    let csv = 'ID,Tanggal,Jenis,Kategori,Nominal,Rekening,Catatan\n';
+    txs.forEach(t => {
+      const typeStr = t.type === 'income' ? 'Pemasukan' : 'Pengeluaran';
+      const row = [
+        t.id,
+        t.date,
+        typeStr,
+        `"${(t.category || '').replace(/"/g, '""')}"`,
+        t.amount,
+        `"${(accMap[t.accountId] || '-').replace(/"/g, '""')}"`,
+        `"${(t.notes || '').replace(/"/g, '""')}"`
+      ];
+      csv += row.join(',') + '\n';
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `riwayat_transaksi_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
+
+window.storage = new CashTrackerStorage();
+
+
+// --- charts.js ---
+// ==========================================================================
+// Cash Tracker - Pure Canvas & SVG Interactive Chart Engine (Personal Finance)
+// 100% offline, responsive for mobile & desktop, zero dependencies
+// ==========================================================================
+
+const AppCharts = {
+  colors: [
+    '#10b981', '#0ea5e9', '#f59e0b', '#ec4899', '#8b5cf6',
+    '#14b8a6', '#f97316', '#6366f1', '#84cc16', '#06b6d4', '#e11d48'
+  ],
+
+  // 1. Interactive Doughnut / Pie Chart
+  renderDoughnut(canvasId, legendId, data) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.parentElement.clientWidth || 300;
+    const height = canvas.height = Math.min(240, width * 0.75);
+
+    ctx.clearRect(0, 0, width, height);
+
+    const total = data.reduce((sum, d) => sum + (Number(d.value) || 0), 0);
+
+    if (total === 0 || data.length === 0) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Belum ada data transaksi', width / 2, height / 2);
+      if (legendId) {
+        const leg = document.getElementById(legendId);
+        if (leg) leg.innerHTML = '';
+      }
+      return;
+    }
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(centerX, centerY) - 15;
+    const innerRadius = radius * 0.58;
+
+    let startAngle = -Math.PI / 2;
+
+    data.forEach((item, idx) => {
+      const sliceAngle = ((Number(item.value) || 0) / total) * (Math.PI * 2);
+      const endAngle = startAngle + sliceAngle;
+      const color = item.color || this.colors[idx % this.colors.length];
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+      ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
+      ctx.closePath();
+
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      ctx.strokeStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? '#131b2e' : '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      startAngle = endAngle;
+    });
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? '#94a3b8' : '#64748b';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('TOTAL', centerX, centerY - 8);
+
+    ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(CashTrackerStorage.formatRupiah(total, false), centerX, centerY + 10);
+
+    if (legendId) {
+      const leg = document.getElementById(legendId);
+      if (leg) {
+        leg.innerHTML = data.slice(0, 6).map((item, idx) => {
+          const color = item.color || this.colors[idx % this.colors.length];
+          const pct = Math.round(((Number(item.value) || 0) / total) * 100);
+          return `
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; font-size:12px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:${color}; flex-shrink:0;"></span>
+                <span style="color:var(--text-main); max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.label}</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-weight:600; color:var(--text-main);">${pct}%</span>
+                <span style="color:var(--text-muted); font-size:10px; margin-left:3px;">(${CashTrackerStorage.formatRupiah(item.value, false)})</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  },
+
+  // 2. Bar Chart: Monthly Income vs Expense (Mobile optimized)
+  renderBarComparison(canvasId, labels, incomeData, expenseData) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.parentElement.clientWidth || 500;
+    const height = canvas.height = width < 480 ? 220 : 260;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const isMobile = width < 480;
+    const padding = { top: 20, right: 15, bottom: 35, left: isMobile ? 50 : 65 };
+    const chartW = width - padding.left - padding.right;
+    const chartH = height - padding.top - padding.bottom;
+
+    const maxVal = Math.max(...incomeData, ...expenseData, 1000000) * 1.15;
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.fillStyle = textColor;
+    ctx.font = isMobile ? '9px sans-serif' : '11px sans-serif';
+    ctx.textAlign = 'right';
+
+    for (let i = 0; i <= 3; i++) {
+      const y = padding.top + (chartH * (1 - i / 3));
+      const val = (maxVal * (i / 3));
+
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(width - padding.right, y);
+      ctx.stroke();
+
+      let labelStr = val >= 1000000 ? `${(val / 1000000).toFixed(0)}jt` : (val >= 1000 ? `${(val / 1000).toFixed(0)}rb` : '0');
+      ctx.fillText(labelStr, padding.left - 6, y + 3);
+    }
+
+    const groupCount = labels.length;
+    const groupWidth = chartW / groupCount;
+    const barWidth = Math.min(groupWidth * 0.38, isMobile ? 14 : 26);
+
+    labels.forEach((label, idx) => {
+      const groupX = padding.left + (idx * groupWidth);
+      const incVal = incomeData[idx] || 0;
+      const expVal = expenseData[idx] || 0;
+
+      const incH = (incVal / maxVal) * chartH;
+      const expH = (expVal / maxVal) * chartH;
+
+      const x1 = groupX + (groupWidth / 2) - barWidth - 2;
+      const y1 = padding.top + chartH - incH;
+      const x2 = groupX + (groupWidth / 2) + 2;
+      const y2 = padding.top + chartH - expH;
+
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.roundRect(x1, y1, barWidth, incH, [3, 3, 0, 0]);
+      ctx.fill();
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.roundRect(x2, y2, barWidth, expH, [3, 3, 0, 0]);
+      ctx.fill();
+
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'center';
+      ctx.font = isMobile ? '9px sans-serif' : '11px sans-serif';
+      ctx.fillText(label, groupX + (groupWidth / 2), height - padding.bottom + 16);
+    });
+  },
+
+  // 3. Balance Sheet Visual (Personal Assets vs Debts)
+  renderBalanceComparison(canvasId, currentAssets, fixedAssets, shortDebts, longDebts) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.parentElement.clientWidth || 450;
+    const height = canvas.height = width < 480 ? 210 : 240;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const totalAssets = currentAssets + fixedAssets;
+    const totalLiabilities = shortDebts + longDebts;
+    const maxVal = Math.max(totalAssets, totalLiabilities, 1000000) * 1.15;
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+
+    const isMobile = width < 480;
+    const padding = { top: 20, right: 15, bottom: 45, left: isMobile ? 50 : 65 };
+    const chartW = width - padding.left - padding.right;
+    const chartH = height - padding.top - padding.bottom;
+
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 3; i++) {
+      const y = padding.top + (chartH * (1 - i / 3));
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(width - padding.right, y);
+      ctx.stroke();
+
+      const val = (maxVal * (i / 3));
+      let labelStr = val >= 1000000000 ? `${(val / 1000000000).toFixed(1)}M` : (val >= 1000000 ? `${(val / 1000000).toFixed(0)}jt` : '0');
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'right';
+      ctx.font = isMobile ? '9px sans-serif' : '11px sans-serif';
+      ctx.fillText(labelStr, padding.left - 6, y + 4);
+    }
+
+    const colWidth = isMobile ? 55 : 80;
+    const assetColX = padding.left + (chartW * 0.28) - (colWidth / 2);
+    const liabColX = padding.left + (chartW * 0.72) - (colWidth / 2);
+
+    let currentY = padding.top + chartH;
+    const hCash = (currentAssets / maxVal) * chartH;
+    const hFixed = (fixedAssets / maxVal) * chartH;
+
+    // Kas/Setara Kas (Sky)
+    ctx.fillStyle = '#0284c7';
+    currentY -= hCash;
+    ctx.fillRect(assetColX, currentY, colWidth, hCash);
+
+    // Aset Tetap/Investasi (Emerald)
+    ctx.fillStyle = '#10b981';
+    currentY -= hFixed;
+    ctx.fillRect(assetColX, currentY, colWidth, hFixed);
+
+    let liabY = padding.top + chartH;
+    const hShort = (shortDebts / maxVal) * chartH;
+    const hLong = (longDebts / maxVal) * chartH;
+
+    // Short term (Rose)
+    ctx.fillStyle = '#f43f5e';
+    liabY -= hShort;
+    ctx.fillRect(liabColX, liabY, colWidth, hShort);
+
+    // Long term (Dark Rose)
+    ctx.fillStyle = '#9f1239';
+    liabY -= hLong;
+    ctx.fillRect(liabColX, liabY, colWidth, hLong);
+
+    ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
+    ctx.textAlign = 'center';
+    ctx.font = isMobile ? 'bold 10px sans-serif' : 'bold 11px sans-serif';
+    ctx.fillText('ASET PRIBADI', assetColX + colWidth / 2, height - padding.bottom + 18);
+    ctx.fillText('TOTAL HUTANG', liabColX + colWidth / 2, height - padding.bottom + 18);
+
+    ctx.font = isMobile ? '10px sans-serif' : '11px sans-serif';
+    ctx.fillStyle = '#10b981';
+    ctx.fillText(CashTrackerStorage.formatRupiah(totalAssets, true), assetColX + colWidth / 2, height - padding.bottom + 32);
+
+    ctx.fillStyle = '#f43f5e';
+    ctx.fillText(CashTrackerStorage.formatRupiah(totalLiabilities, true), liabColX + colWidth / 2, height - padding.bottom + 32);
+  }
+};
+
+
+// --- accounts.js ---
+// ==========================================================================
+// Cash Tracker - Accounts Module (Kelola Akun Simpanan, Bank & E-Wallet)
+// Supports BRI, BNI, BCA, Mandiri, BSI, CIMB, e-Wallets, Cash & Transfer
+// ==========================================================================
+
+const AccountsModule = {
+  presets: [
+    { key: 'bri', name: 'Bank BRI', type: 'bank', color: '#00529C', label: 'BRI' },
+    { key: 'bni', name: 'Bank BNI', type: 'bank', color: '#F15A22', label: 'BNI' },
+    { key: 'bca', name: 'Bank BCA', type: 'bank', color: '#005596', label: 'BCA' },
+    { key: 'mandiri', name: 'Bank Mandiri', type: 'bank', color: '#002D62', label: 'Mandiri' },
+    { key: 'bsi', name: 'Bank BSI', type: 'bank', color: '#00A39D', label: 'BSI Syariah' },
+    { key: 'cimb', name: 'CIMB Niaga', type: 'bank', color: '#ED1C24', label: 'CIMB' },
+    { key: 'jago', name: 'Bank Jago', type: 'bank', color: '#FF7F00', label: 'Jago' },
+    { key: 'seabank', name: 'SeaBank', type: 'bank', color: '#FF5722', label: 'SeaBank' },
+    { key: 'btn', name: 'Bank BTN', type: 'bank', color: '#003399', label: 'BTN' },
+    { key: 'danamon', name: 'Bank Danamon', type: 'bank', color: '#007A3D', label: 'Danamon' },
+    { key: 'jenius', name: 'Jenius (BTPN)', type: 'bank', color: '#00A4E4', label: 'Jenius' },
+    { key: 'gopay', name: 'GoPay', type: 'ewallet', color: '#00AED6', label: 'GoPay' },
+    { key: 'ovo', name: 'OVO', type: 'ewallet', color: '#4C2A86', label: 'OVO' },
+    { key: 'dana', name: 'DANA', type: 'ewallet', color: '#118EEA', label: 'DANA' },
+    { key: 'shopeepay', name: 'ShopeePay', type: 'ewallet', color: '#EE4D2D', label: 'ShopeePay' },
+    { key: 'cash', name: 'Dompet Tunai', type: 'cash', color: '#10B981', label: 'Uang Tunai' }
+  ],
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    // Mask initial balance in modal
+    const balanceInput = document.getElementById('accInitialBalanceInput');
+    if (balanceInput) {
+      balanceInput.addEventListener('input', (e) => {
+        const val = CashTrackerStorage.parseRupiah(e.target.value);
+        e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+      });
+    }
+
+    // Mask transfer amount
+    const transferAmount = document.getElementById('transferAmountInput');
+    if (transferAmount) {
+      transferAmount.addEventListener('input', (e) => {
+        const val = CashTrackerStorage.parseRupiah(e.target.value);
+        e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+      });
+    }
+  },
+
+  renderPresets() {
+    const container = document.getElementById('accountPresetsContainer');
+    if (!container) return;
+
+    container.innerHTML = this.presets.map(p => `
+      <button type="button" class="btn btn-sm" style="background:${p.color}15; color:${p.color}; border:1px solid ${p.color}40; font-size:11px; padding:3px 8px;" onclick="AccountsModule.applyPreset('${p.key}')">
+        ${p.label}
+      </button>
+    `).join('');
+  },
+
+  applyPreset(key) {
+    const preset = this.presets.find(p => p.key === key);
+    if (!preset) return;
+
+    document.getElementById('accNameInput').value = preset.name;
+    document.getElementById('accTypeSelect').value = preset.type;
+    document.getElementById('accColorInput').value = preset.color;
+  },
+
+  openAddModal() {
+    const modal = document.getElementById('accountModal');
+    if (!modal) return;
+
+    document.getElementById('accountForm').reset();
+    document.getElementById('accEditId').value = '';
+    document.getElementById('accModalTitle').innerText = 'Tambah Akun Simpanan / Debet Baru';
+    document.getElementById('accColorInput').value = '#00529C'; // default BRI Blue
+    this.renderPresets();
+
+    modal.classList.add('active');
+  },
+
+  openEditModal(id) {
+    const acc = (window.storage.data.accounts || []).find(a => a.id === id);
+    if (!acc) return;
+
+    const modal = document.getElementById('accountModal');
+    document.getElementById('accEditId').value = acc.id;
+    document.getElementById('accNameInput').value = acc.name || '';
+    document.getElementById('accTypeSelect').value = acc.type || 'bank';
+    document.getElementById('accNumberInput').value = acc.accountNumber || '';
+    document.getElementById('accInitialBalanceInput').value = CashTrackerStorage.formatRupiah(acc.initialBalance || 0, false);
+    document.getElementById('accColorInput').value = acc.color || '#10b981';
+
+    document.getElementById('accModalTitle').innerText = 'Edit Akun Simpanan';
+    this.renderPresets();
+    modal.classList.add('active');
+  },
+
+  saveAccountFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('accEditId').value;
+    const name = document.getElementById('accNameInput').value.trim();
+    const type = document.getElementById('accTypeSelect').value;
+    const accountNumber = document.getElementById('accNumberInput').value.trim();
+    const initialBalance = CashTrackerStorage.parseRupiah(document.getElementById('accInitialBalanceInput').value);
+    const color = document.getElementById('accColorInput').value || '#10b981';
+
+    if (!name) {
+      AppUI.showToast('Nama akun / bank wajib diisi!', 'error');
+      return;
+    }
+
+    if (id) {
+      // Edit existing
+      const idx = window.storage.data.accounts.findIndex(a => a.id === id);
+      if (idx !== -1) {
+        window.storage.data.accounts[idx] = {
+          ...window.storage.data.accounts[idx],
+          name, type, accountNumber, initialBalance, color
+        };
+        AppUI.showToast(`Akun "${name}" berhasil diperbarui!`, 'success');
+      }
+    } else {
+      // Create new
+      const newAcc = {
+        id: 'acc_' + Date.now(),
+        name,
+        type,
+        accountNumber,
+        initialBalance,
+        color
+      };
+      window.storage.data.accounts.push(newAcc);
+      AppUI.showToast(`Akun "${name}" berhasil ditambahkan!`, 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('accountModal').classList.remove('active');
+    window.app.refreshAll();
+  },
+
+  deleteAccount(id) {
+    if (window.storage.data.accounts.length <= 1) {
+      AppUI.showToast('Anda harus memiliki setidaknya satu akun aktif!', 'warning');
+      return;
+    }
+
+    const acc = window.storage.data.accounts.find(a => a.id === id);
+    if (!acc) return;
+
+    if (!confirm(`Hapus akun simpanan "${acc.name}"? Transaksi yang sudah terhubung akan tetap tercatat.`)) return;
+
+    window.storage.data.accounts = window.storage.data.accounts.filter(a => a.id !== id);
+    window.storage.save();
+    AppUI.showToast(`Akun "${acc.name}" telah dihapus.`, 'info');
+    window.app.refreshAll();
+  },
+
+  // --- Transfer Antar Akun ---
+  openTransferModal() {
+    const modal = document.getElementById('transferModal');
+    if (!modal) return;
+
+    document.getElementById('transferForm').reset();
+    document.getElementById('transferDateInput').value = new Date().toISOString().split('T')[0];
+
+    const accounts = window.storage.getCalculatedAccounts();
+    const fromSelect = document.getElementById('transferFromSelect');
+    const toSelect = document.getElementById('transferToSelect');
+
+    const options = accounts.map(a => `<option value="${a.id}">${a.name} (Saldo: ${CashTrackerStorage.formatRupiah(a.currentBalance)})</option>`).join('');
+    fromSelect.innerHTML = options;
+    toSelect.innerHTML = options;
+
+    if (accounts.length > 1) {
+      toSelect.selectedIndex = 1;
+    }
+
+    modal.classList.add('active');
+  },
+
+  saveTransferFromModal(e) {
+    e.preventDefault();
+    const fromId = document.getElementById('transferFromSelect').value;
+    const toId = document.getElementById('transferToSelect').value;
+    const amount = CashTrackerStorage.parseRupiah(document.getElementById('transferAmountInput').value);
+    const date = document.getElementById('transferDateInput').value;
+    const notes = document.getElementById('transferNotesInput').value.trim();
+
+    if (fromId === toId) {
+      AppUI.showToast('Akun asal dan akun tujuan transfer tidak boleh sama!', 'error');
+      return;
+    }
+
+    if (!amount || amount <= 0) {
+      AppUI.showToast('Nominal transfer harus lebih besar dari 0!', 'error');
+      return;
+    }
+
+    const accounts = window.storage.getCalculatedAccounts();
+    const fromAcc = accounts.find(a => a.id === fromId);
+    const toAcc = accounts.find(a => a.id === toId);
+
+    // Create transfer transaction
+    const newTx = {
+      id: 'trx_' + Date.now(),
+      type: 'transfer',
+      date,
+      amount,
+      category: 'Pindah Dana / Transfer Antar Akun',
+      fromAccountId: fromId,
+      toAccountId: toId,
+      notes: notes || `Transfer dari ${fromAcc.name} ke ${toAcc.name}`
+    };
+
+    window.storage.data.transactions.unshift(newTx);
+    window.storage.save();
+
+    document.getElementById('transferModal').classList.remove('active');
+    AppUI.showToast(`Sukses transfer ${CashTrackerStorage.formatRupiah(amount)} dari ${fromAcc.name} ke ${toAcc.name}!`, 'success');
+    window.app.refreshAll();
+  },
+
+  renderAccountsCards() {
+    const container = document.getElementById('txAccountsContainer');
+    if (!container) return;
+
+    const accounts = window.storage.getCalculatedAccounts();
+
+    container.innerHTML = accounts.map(a => {
+      const typeLabel = a.type === 'bank' ? 'BANK / DEBET' : (a.type === 'ewallet' ? 'E-WALLET' : (a.type === 'cash' ? 'KAS TUNAI' : 'SIMPANAN'));
+      const iconName = a.type === 'bank' ? 'landmark' : 'wallet';
+
+      return `
+        <div class="card" style="padding: 1rem 1.15rem; border-left: 4.5px solid ${a.color || 'var(--primary)'}; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">
+                ${typeLabel}
+              </div>
+              <div style="font-weight: 700; font-size: 0.95rem; margin-top: 2px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                <span style="color: ${a.color};">${icon(iconName, 'w-4 h-4', 16)}</span>
+                ${a.name}
+              </div>
+              ${a.accountNumber ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: monospace;">No: ${a.accountNumber}</div>` : ''}
+            </div>
+
+            <div style="display: flex; gap: 4px;">
+              <button class="btn btn-secondary btn-sm" style="padding: 3px 6px; min-height: 26px;" onclick="AccountsModule.openEditModal('${a.id}')" title="Edit Akun">
+                ${icon('edit', 'w-3 h-3', 12)}
+              </button>
+              <button class="btn btn-outline-danger btn-sm" style="padding: 3px 6px; min-height: 26px;" onclick="AccountsModule.deleteAccount('${a.id}')" title="Hapus Akun">
+                ${icon('trash', 'w-3 h-3', 12)}
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px dashed var(--border-subtle); display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size: 11px; color: var(--text-muted);">Saldo Tersedia:</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">
+              ${CashTrackerStorage.formatRupiah(a.currentBalance)}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  renderDropdowns() {
+    const accounts = window.storage.getCalculatedAccounts();
+    const options = accounts.map(a => 
+      `<option value="${a.id}">${a.name} (Saldo: ${CashTrackerStorage.formatRupiah(a.currentBalance)})</option>`
+    ).join('');
+
+    const txSelect = document.getElementById('txAccountSelect');
+    if (txSelect) txSelect.innerHTML = options;
+
+    const remSelect = document.getElementById('remAccountSelect');
+    if (remSelect) remSelect.innerHTML = options;
+  },
+
+  render() {
+    this.renderAccountsCards();
+    this.renderDropdowns();
+  }
+};
+
+
+// --- transactions.js ---
+// ==========================================================================
+// Cash Tracker - Transactions Module (Pemasukan, Pengeluaran & Transfer)
+// ==========================================================================
+
+const TransactionsModule = {
+  activeFilterType: 'all', // 'all', 'income', 'expense', 'transfer'
+  searchQuery: '',
+  filterCategory: '',
+  filterAccountId: '',
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    const searchInput = document.getElementById('txSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        this.searchQuery = e.target.value.toLowerCase();
+        this.renderTable();
+      });
+    }
+
+    document.querySelectorAll('[data-tx-filter]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-tx-filter]').forEach(b => b.classList.remove('active', 'btn-primary'));
+        btn.classList.add('active', 'btn-primary');
+        this.activeFilterType = btn.getAttribute('data-tx-filter');
+        this.renderTable();
+      });
+    });
+
+    const nominalInput = document.getElementById('txAmountInput');
+    if (nominalInput) {
+      nominalInput.addEventListener('input', (e) => {
+        const val = CashTrackerStorage.parseRupiah(e.target.value);
+        e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+      });
+    }
+
+    const typeRadios = document.querySelectorAll('input[name="txModalType"]');
+    typeRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        this.populateModalCategories();
+      });
+    });
+  },
+
+  populateModalCategories() {
+    const isIncome = document.querySelector('input[name="txModalType"]:checked').value === 'income';
+    const catSelect = document.getElementById('txCategorySelect');
+    if (!catSelect) return;
+
+    const list = isIncome ? window.storage.data.incomeCategories : window.storage.data.expenseCategories;
+    catSelect.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+  },
+
+  populateModalAccounts() {
+    AccountsModule.renderDropdowns();
+  },
+
+  openAddModal(defaultType = 'income') {
+    const modal = document.getElementById('transactionModal');
+    if (!modal) return;
+
+    document.getElementById('txForm').reset();
+    document.getElementById('txEditId').value = '';
+
+    const radio = document.querySelector(`input[name="txModalType"][value="${defaultType}"]`);
+    if (radio) radio.checked = true;
+
+    document.getElementById('txDateInput').value = new Date().toISOString().split('T')[0];
+
+    this.populateModalCategories();
+    this.populateModalAccounts();
+
+    document.getElementById('txModalTitle').innerText = defaultType === 'income' ? 'Tambah Sumber Pemasukan' : 'Catat Pengeluaran Baru';
+    modal.classList.add('active');
+  },
+
+  openEditModal(id) {
+    const tx = window.storage.data.transactions.find(t => t.id === id);
+    if (!tx) return;
+
+    if (tx.type === 'transfer') {
+      AccountsModule.openTransferModal();
+      return;
+    }
+
+    const modal = document.getElementById('transactionModal');
+    document.getElementById('txEditId').value = tx.id;
+    
+    const radio = document.querySelector(`input[name="txModalType"][value="${tx.type}"]`);
+    if (radio) radio.checked = true;
+
+    this.populateModalCategories();
+    this.populateModalAccounts();
+
+    document.getElementById('txDateInput').value = tx.date;
+    document.getElementById('txAmountInput').value = CashTrackerStorage.formatRupiah(tx.amount, false);
+    document.getElementById('txCategorySelect').value = tx.category;
+    document.getElementById('txAccountSelect').value = tx.accountId;
+    document.getElementById('txNotesInput').value = tx.notes || '';
+
+    document.getElementById('txModalTitle').innerText = 'Edit Transaksi';
+    modal.classList.add('active');
+  },
+
+  saveFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('txEditId').value;
+    const type = document.querySelector('input[name="txModalType"]:checked').value;
+    const date = document.getElementById('txDateInput').value;
+    const amount = CashTrackerStorage.parseRupiah(document.getElementById('txAmountInput').value);
+    const category = document.getElementById('txCategorySelect').value;
+    const accountId = document.getElementById('txAccountSelect').value;
+    const notes = document.getElementById('txNotesInput').value.trim();
+
+    if (!amount || amount <= 0) {
+      AppUI.showToast('Nominal harus lebih besar dari 0!', 'error');
+      return;
+    }
+
+    if (!date) {
+      AppUI.showToast('Silakan pilih tanggal!', 'error');
+      return;
+    }
+
+    if (id) {
+      const idx = window.storage.data.transactions.findIndex(t => t.id === id);
+      if (idx !== -1) {
+        window.storage.data.transactions[idx] = {
+          ...window.storage.data.transactions[idx],
+          type, date, amount, category, accountId, notes
+        };
+        AppUI.showToast('Transaksi berhasil diperbarui!', 'success');
+      }
+    } else {
+      const newTx = {
+        id: 'trx_' + Date.now(),
+        type,
+        date,
+        amount,
+        category,
+        accountId,
+        notes
+      };
+      window.storage.data.transactions.unshift(newTx);
+      AppUI.showToast(type === 'income' ? 'Pemasukan berhasil dicatat!' : 'Pengeluaran berhasil dicatat!', 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('transactionModal').classList.remove('active');
+    window.app.refreshAll();
+  },
+
+  deleteTransaction(id) {
+    if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini? Saldo rekening akan otomatis disesuaikan.')) return;
+    window.storage.data.transactions = window.storage.data.transactions.filter(t => t.id !== id);
+    window.storage.save();
+    AppUI.showToast('Transaksi telah dihapus.', 'info');
+    window.app.refreshAll();
+  },
+
+  getFilteredTransactions() {
+    let list = [...(window.storage.data.transactions || [])];
+    list.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (this.activeFilterType !== 'all') {
+      list = list.filter(t => t.type === this.activeFilterType);
+    }
+
+    if (this.searchQuery) {
+      list = list.filter(t => 
+        (t.category && t.category.toLowerCase().includes(this.searchQuery)) ||
+        (t.notes && t.notes.toLowerCase().includes(this.searchQuery)) ||
+        String(t.amount).includes(this.searchQuery)
+      );
+    }
+
+    return list;
+  },
+
+  renderTable() {
+    const tbody = document.getElementById('txTableBody');
+    if (!tbody) return;
+
+    const list = this.getFilteredTransactions();
+    const accounts = window.storage.getCalculatedAccounts();
+    const accMap = {};
+    accounts.forEach(a => { accMap[a.id] = a.name; });
+
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding: 2rem 1rem; color: var(--text-muted);">
+            ${icon('info', 'w-7 h-7', 28)}
+            <div style="margin-top: 6px; font-weight: 500;">Tidak ada catatan transaksi yang sesuai kriteria.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = list.map(tx => {
+      const isIncome = tx.type === 'income';
+      const isTransfer = tx.type === 'transfer';
+      
+      let badgeClass = 'badge-income';
+      let iconType = 'arrow-down-left';
+      let typeLabel = 'Pemasukan';
+      let amountColor = 'color: var(--income); font-weight: 700;';
+      let sign = '+ ';
+
+      if (isTransfer) {
+        badgeClass = 'badge-info';
+        iconType = 'arrow-left-right';
+        typeLabel = 'Transfer';
+        amountColor = 'color: var(--info); font-weight: 700;';
+        sign = '⇄ ';
+      } else if (!isIncome) {
+        badgeClass = 'badge-expense';
+        iconType = 'arrow-up-right';
+        typeLabel = 'Pengeluaran';
+        amountColor = 'color: var(--expense); font-weight: 700;';
+        sign = '- ';
+      }
+
+      const accountDisplay = isTransfer
+        ? `${accMap[tx.fromAccountId] || 'Asal'} → ${accMap[tx.toAccountId] || 'Tujuan'}`
+        : `${accMap[tx.accountId] || 'Rekening'}`;
+
+      return `
+        <tr>
+          <td style="white-space: nowrap;">
+            <div style="font-weight: 600;">${CashTrackerStorage.formatDateID(tx.date)}</div>
+          </td>
+          <td>
+            <span class="badge ${badgeClass}">
+              ${icon(iconType, 'w-3 h-3', 12)}
+              ${typeLabel}
+            </span>
+          </td>
+          <td>
+            <div style="font-weight: 600; color: var(--text-main); font-size: 0.9rem;">${tx.category || '-'}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${tx.notes || '-'}</div>
+          </td>
+          <td>
+            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; background: rgba(0,0,0,0.04); padding: 3px 8px; border-radius: 6px; font-weight: 500;">
+              ${icon(isTransfer ? 'arrow-left-right' : 'landmark', 'w-3 h-3', 12)}
+              ${accountDisplay}
+            </span>
+          </td>
+          <td style="${amountColor}; font-size: 0.95rem; text-align: right; white-space: nowrap;">
+            ${sign}${CashTrackerStorage.formatRupiah(tx.amount)}
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            ${!isTransfer ? `
+              <button class="btn btn-secondary btn-sm" onclick="TransactionsModule.openEditModal('${tx.id}')" title="Edit">
+                ${icon('edit', 'w-3 h-3', 12)}
+              </button>
+            ` : ''}
+            <button class="btn btn-outline-danger btn-sm" onclick="TransactionsModule.deleteTransaction('${tx.id}')" title="Hapus">
+              ${icon('trash', 'w-3 h-3', 12)}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  renderSummaryCards() {
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    (window.storage.data.transactions || []).forEach(tx => {
+      if (tx.type === 'income') totalIncome += Number(tx.amount || 0);
+      if (tx.type === 'expense') totalExpense += Number(tx.amount || 0);
+    });
+
+    const net = totalIncome - totalExpense;
+
+    const elIncome = document.getElementById('txSumIncome');
+    if (elIncome) elIncome.innerText = CashTrackerStorage.formatRupiah(totalIncome);
+
+    const elExpense = document.getElementById('txSumExpense');
+    if (elExpense) elExpense.innerText = CashTrackerStorage.formatRupiah(totalExpense);
+
+    const elNet = document.getElementById('txSumNet');
+    if (elNet) {
+      elNet.innerText = CashTrackerStorage.formatRupiah(net);
+      elNet.style.color = net >= 0 ? 'var(--income)' : 'var(--expense)';
+    }
+  },
+
+  render() {
+    this.renderSummaryCards();
+    AccountsModule.render();
+    this.renderTable();
+  }
+};
+
+
+// --- debts.js ---
+// ==========================================================================
+// Cash Tracker - Debts & Liabilities Module (Hutang & Kewajiban)
+// Jangka Pendek, Jangka Panjang, Cicilan, Bunga, & Auto-sync to Neraca
+// ==========================================================================
+
+const DebtsModule = {
+  activeTab: 'all', // 'all', 'short', 'long'
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    ['dbtTotalLoanInput', 'dbtRemainingInput', 'dbtMonthlyPaymentInput'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', (e) => {
+          const val = CashTrackerStorage.parseRupiah(e.target.value);
+          e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+        });
+      }
+    });
+
+    document.querySelectorAll('[data-dbt-filter]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-dbt-filter]').forEach(b => b.classList.remove('active', 'btn-primary'));
+        btn.classList.add('active', 'btn-primary');
+        this.activeTab = btn.getAttribute('data-dbt-filter');
+        this.renderTable();
+      });
+    });
+  },
+
+  openAddModal() {
+    const modal = document.getElementById('debtModal');
+    if (!modal) return;
+    document.getElementById('debtForm').reset();
+    document.getElementById('dbtEditId').value = '';
+    document.getElementById('debtModalTitle').innerText = 'Catat Hutang / Pinjaman Baru';
+    modal.classList.add('active');
+  },
+
+  openEditModal(id) {
+    const item = (window.storage.data.debts || []).find(d => d.id === id);
+    if (!item) return;
+
+    const modal = document.getElementById('debtModal');
+    document.getElementById('dbtEditId').value = item.id;
+    document.getElementById('dbtCreditorInput').value = item.creditorName || '';
+    document.getElementById('dbtCategorySelect').value = item.category || 'Jangka Pendek';
+    document.getElementById('dbtTotalLoanInput').value = CashTrackerStorage.formatRupiah(item.totalLoan, false);
+    document.getElementById('dbtRemainingInput').value = CashTrackerStorage.formatRupiah(item.remainingAmount, false);
+    document.getElementById('dbtInterestInput').value = item.interestRate || 0;
+    document.getElementById('dbtMonthlyPaymentInput').value = CashTrackerStorage.formatRupiah(item.monthlyPayment, false);
+    document.getElementById('dbtDueDayInput').value = item.dueDayOfMonth || 1;
+    document.getElementById('dbtNotesInput').value = item.notes || '';
+
+    document.getElementById('debtModalTitle').innerText = 'Edit Data Hutang / Kewajiban';
+    modal.classList.add('active');
+  },
+
+  saveFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('dbtEditId').value;
+    const creditorName = document.getElementById('dbtCreditorInput').value.trim();
+    const category = document.getElementById('dbtCategorySelect').value;
+    const totalLoan = CashTrackerStorage.parseRupiah(document.getElementById('dbtTotalLoanInput').value);
+    const remainingAmount = CashTrackerStorage.parseRupiah(document.getElementById('dbtRemainingInput').value);
+    const interestRate = parseFloat(document.getElementById('dbtInterestInput').value) || 0;
+    const monthlyPayment = CashTrackerStorage.parseRupiah(document.getElementById('dbtMonthlyPaymentInput').value);
+    const dueDayOfMonth = parseInt(document.getElementById('dbtDueDayInput').value, 10) || 1;
+    const notes = document.getElementById('dbtNotesInput').value.trim();
+
+    if (!creditorName) {
+      AppUI.showToast('Nama Kreditor / Bank harus diisi!', 'error');
+      return;
+    }
+
+    if (id) {
+      const idx = window.storage.data.debts.findIndex(d => d.id === id);
+      if (idx !== -1) {
+        window.storage.data.debts[idx] = {
+          ...window.storage.data.debts[idx],
+          creditorName, category, totalLoan, remainingAmount, interestRate, monthlyPayment, dueDayOfMonth, notes,
+          status: remainingAmount <= 0 ? 'paid' : 'active'
+        };
+        AppUI.showToast('Data hutang diperbarui!', 'success');
+      }
+    } else {
+      const newDebt = {
+        id: 'dbt_' + Date.now(),
+        creditorName, category, totalLoan, remainingAmount, interestRate, monthlyPayment, dueDayOfMonth, notes,
+        status: remainingAmount <= 0 ? 'paid' : 'active'
+      };
+      window.storage.data.debts.unshift(newDebt);
+      AppUI.showToast('Hutang baru berhasil dicatat!', 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('debtModal').classList.remove('active');
+    window.app.refreshAll();
+  },
+
+  payInstallment(id) {
+    const debt = (window.storage.data.debts || []).find(d => d.id === id);
+    if (!debt) return;
+
+    const defaultPayment = debt.monthlyPayment || debt.remainingAmount;
+    const paymentPrompt = prompt(`Masukkan nominal pembayaran cicilan untuk "${debt.creditorName}":\n(Sisa Hutang: ${CashTrackerStorage.formatRupiah(debt.remainingAmount)})`, defaultPayment);
+    if (!paymentPrompt) return;
+
+    const paidVal = CashTrackerStorage.parseRupiah(paymentPrompt);
+    if (paidVal <= 0) {
+      AppUI.showToast('Nominal pembayaran tidak valid.', 'error');
+      return;
+    }
+
+    // Reduce debt remaining
+    debt.remainingAmount = Math.max(0, debt.remainingAmount - paidVal);
+    if (debt.remainingAmount === 0) {
+      debt.status = 'paid';
+    }
+
+    // Record as Expense transaction
+    const newTx = {
+      id: 'trx_' + Date.now(),
+      type: 'expense',
+      date: new Date().toISOString().split('T')[0],
+      amount: paidVal,
+      category: 'Cicilan & Bayar Hutang',
+      accountId: window.storage.data.accounts[0]?.id || 'acc_1',
+      notes: `Pembayaran cicilan: ${debt.creditorName} (Sisa: ${CashTrackerStorage.formatRupiah(debt.remainingAmount)})`
+    };
+    window.storage.data.transactions.unshift(newTx);
+
+    window.storage.save();
+    AppUI.showToast(`Pembayaran cicilan ${CashTrackerStorage.formatRupiah(paidVal)} berhasil dicatat & masuk ke pengeluaran!`, 'success');
+    window.app.refreshAll();
+  },
+
+  deleteDebt(id) {
+    if (!confirm('Hapus data hutang ini?')) return;
+    window.storage.data.debts = window.storage.data.debts.filter(d => d.id !== id);
+    window.storage.save();
+    AppUI.showToast('Data hutang dihapus.', 'info');
+    window.app.refreshAll();
+  },
+
+  renderTable() {
+    const tbody = document.getElementById('debtsTableBody');
+    if (!tbody) return;
+
+    let list = [...(window.storage.data.debts || [])];
+
+    if (this.activeTab === 'short') {
+      list = list.filter(d => d.category === 'Jangka Pendek');
+    } else if (this.activeTab === 'long') {
+      list = list.filter(d => d.category === 'Jangka Panjang');
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            ${icon('credit-card', 'w-8 h-8', 32)}
+            <div style="margin-top: 8px; font-weight: 500;">Tidak ada hutang aktif pada kategori ini. Bebas beban!</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = list.map(item => {
+      const isPaid = item.remainingAmount <= 0;
+      const pctPaid = item.totalLoan > 0 ? Math.min(100, Math.round(((item.totalLoan - item.remainingAmount) / item.totalLoan) * 100)) : 100;
+      const isShort = item.category === 'Jangka Pendek';
+
+      return `
+        <tr>
+          <td>
+            <div style="font-weight: 600; color: var(--text-main);">${item.creditorName}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${item.notes || '-'}</div>
+          </td>
+          <td>
+            <span class="badge ${isShort ? 'badge-warning' : 'badge-purple'}">${item.category}</span>
+          </td>
+          <td style="text-align: right;">
+            <div>${CashTrackerStorage.formatRupiah(item.totalLoan)}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Bunga: ${item.interestRate}%</div>
+          </td>
+          <td style="text-align: right;">
+            <div style="font-size: 1rem; font-weight: 700; color: ${isPaid ? 'var(--income)' : 'var(--expense)'};">
+              ${isPaid ? 'LUNAS' : CashTrackerStorage.formatRupiah(item.remainingAmount)}
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Progress: ${pctPaid}%</div>
+          </td>
+          <td style="text-align: right;">
+            <div style="font-weight: 600;">${CashTrackerStorage.formatRupiah(item.monthlyPayment)} /bln</div>
+            <div style="font-size: 11px; color: var(--warning); font-weight: 500;">Tgl ${item.dueDayOfMonth} tiap bulan</div>
+          </td>
+          <td style="text-align: center;">
+            <span class="badge ${isPaid ? 'badge-income' : 'badge-expense'}">
+              ${isPaid ? 'Lunas' : 'Belum Lunas'}
+            </span>
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            ${!isPaid ? `
+              <button class="btn btn-primary btn-sm" onclick="DebtsModule.payInstallment('${item.id}')" title="Bayar Cicilan">
+                ${icon('check-circle', 'w-3.5 h-3.5', 14)} Bayar
+              </button>
+            ` : ''}
+            <button class="btn btn-secondary btn-sm" onclick="DebtsModule.openEditModal('${item.id}')" title="Edit">
+              ${icon('edit', 'w-3.5 h-3.5', 14)}
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="DebtsModule.deleteDebt('${item.id}')" title="Hapus">
+              ${icon('trash', 'w-3.5 h-3.5', 14)}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  renderSummary() {
+    const totalShort = window.storage.getTotalShortTermDebts();
+    const totalLong = window.storage.getTotalLongTermDebts();
+    const totalAll = totalShort + totalLong;
+
+    const monthlyTotal = (window.storage.data.debts || [])
+      .filter(d => d.status === 'active')
+      .reduce((sum, d) => sum + (Number(d.monthlyPayment) || 0), 0);
+
+    const elTotal = document.getElementById('debtTotalAmount');
+    if (elTotal) elTotal.innerText = CashTrackerStorage.formatRupiah(totalAll);
+
+    const elShort = document.getElementById('debtShortTermAmount');
+    if (elShort) elShort.innerText = CashTrackerStorage.formatRupiah(totalShort);
+
+    const elLong = document.getElementById('debtLongTermAmount');
+    if (elLong) elLong.innerText = CashTrackerStorage.formatRupiah(totalLong);
+
+    const elMonthly = document.getElementById('debtMonthlyTotal');
+    if (elMonthly) elMonthly.innerText = CashTrackerStorage.formatRupiah(monthlyTotal);
+  },
+
+  render() {
+    this.renderSummary();
+    this.renderTable();
+  }
+};
+
+
+// --- balance_sheet.js ---
+// ==========================================================================
+// Cash Tracker - Balance Sheet Module (Neraca Keuangan Pribadi)
+// Personal Net Worth: Aset Pribadi, Hutang Pribadi & Ekuitas
+// ==========================================================================
+
+const BalanceSheetModule = {
+  viewMode: 'skontro', // 'skontro' or 'stafel'
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    document.querySelectorAll('[data-bs-view]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-bs-view]').forEach(b => b.classList.remove('active', 'btn-primary'));
+        btn.classList.add('active', 'btn-primary');
+        this.viewMode = btn.getAttribute('data-bs-view');
+        this.renderView();
+      });
+    });
+
+    ['assetPurchaseValueInput', 'assetCurrentValueInput'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', (e) => {
+          const val = CashTrackerStorage.parseRupiah(e.target.value);
+          e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+        });
+      }
+    });
+  },
+
+  openAddAssetModal() {
+    const modal = document.getElementById('assetModal');
+    if (!modal) return;
+    document.getElementById('assetForm').reset();
+    document.getElementById('assetEditId').value = '';
+    document.getElementById('assetDateInput').value = new Date().toISOString().split('T')[0];
+    document.getElementById('assetModalTitle').innerText = 'Tambah Aset Pribadi Baru';
+    modal.classList.add('active');
+  },
+
+  openEditAssetModal(id) {
+    const item = (window.storage.data.fixedAssets || []).find(a => a.id === id);
+    if (!item) return;
+
+    const modal = document.getElementById('assetModal');
+    document.getElementById('assetEditId').value = item.id;
+    document.getElementById('assetNameInput').value = item.name || '';
+    document.getElementById('assetCategorySelect').value = item.category || 'Properti';
+    document.getElementById('assetPurchaseValueInput').value = CashTrackerStorage.formatRupiah(item.purchaseValue, false);
+    document.getElementById('assetCurrentValueInput').value = CashTrackerStorage.formatRupiah(item.currentValue || item.purchaseValue, false);
+    document.getElementById('assetDateInput').value = item.purchaseDate || new Date().toISOString().split('T')[0];
+    document.getElementById('assetNotesInput').value = item.notes || '';
+
+    document.getElementById('assetModalTitle').innerText = 'Edit Data Aset Pribadi';
+    modal.classList.add('active');
+  },
+
+  saveAssetFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('assetEditId').value;
+    const name = document.getElementById('assetNameInput').value.trim();
+    const category = document.getElementById('assetCategorySelect').value;
+    const purchaseValue = CashTrackerStorage.parseRupiah(document.getElementById('assetPurchaseValueInput').value);
+    const currentValue = CashTrackerStorage.parseRupiah(document.getElementById('assetCurrentValueInput').value);
+    const purchaseDate = document.getElementById('assetDateInput').value;
+    const notes = document.getElementById('assetNotesInput').value.trim();
+
+    if (!name) {
+      AppUI.showToast('Nama aset wajib diisi!', 'error');
+      return;
+    }
+
+    if (id) {
+      const idx = window.storage.data.fixedAssets.findIndex(a => a.id === id);
+      if (idx !== -1) {
+        window.storage.data.fixedAssets[idx] = {
+          ...window.storage.data.fixedAssets[idx],
+          name, category, purchaseValue, currentValue, purchaseDate, notes
+        };
+        AppUI.showToast('Aset pribadi berhasil diperbarui!', 'success');
+      }
+    } else {
+      const newAsset = {
+        id: 'ast_' + Date.now(),
+        name, category, purchaseValue, currentValue, purchaseDate, notes
+      };
+      window.storage.data.fixedAssets.unshift(newAsset);
+      AppUI.showToast('Aset pribadi baru berhasil dicatat!', 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('assetModal').classList.remove('active');
+    window.app.refreshAll();
+  },
+
+  deleteAsset(id) {
+    if (!confirm('Hapus aset ini dari daftar neraca?')) return;
+    window.storage.data.fixedAssets = window.storage.data.fixedAssets.filter(a => a.id !== id);
+    window.storage.save();
+    AppUI.showToast('Aset telah dihapus.', 'info');
+    window.app.refreshAll();
+  },
+
+  renderHealthMetrics() {
+    const totalAssets = window.storage.getTotalAssets();
+    const totalDebts = window.storage.getTotalDebts();
+    const currentAssets = window.storage.getTotalCurrentAssets();
+    const shortDebts = window.storage.getTotalShortTermDebts();
+    const netWorth = window.storage.getNetWorth();
+
+    const dar = totalAssets > 0 ? (totalDebts / totalAssets) * 100 : 0;
+    let darStatus = 'Sangat Sehat';
+    let darColor = 'var(--income)';
+    if (dar > 60) {
+      darStatus = 'Tinggi / Beban Berat';
+      darColor = 'var(--expense)';
+    } else if (dar > 35) {
+      darStatus = 'Waspada / Sedang';
+      darColor = 'var(--warning)';
+    }
+
+    const currentRatio = shortDebts > 0 ? (currentAssets / shortDebts) : (currentAssets > 0 ? 10 : 0);
+    let crStatus = 'Dana Cair Sangat Baik';
+    let crColor = 'var(--income)';
+    if (currentRatio < 1.0 && shortDebts > 0) {
+      crStatus = 'Defisit Kas Jangka Pendek';
+      crColor = 'var(--expense)';
+    } else if (currentRatio < 1.5 && shortDebts > 0) {
+      crStatus = 'Cukup / Waspada';
+      crColor = 'var(--warning)';
+    }
+
+    const elDAR = document.getElementById('bsDARValue');
+    if (elDAR) {
+      elDAR.innerHTML = `
+        <span style="font-size: 1.25rem; font-weight: 700; color:${darColor};">${dar.toFixed(1)}%</span>
+        <span class="badge" style="background: rgba(0,0,0,0.05); color:${darColor}; margin-left: 6px;">${darStatus}</span>
+      `;
+    }
+
+    const elCR = document.getElementById('bsCRValue');
+    if (elCR) {
+      elCR.innerHTML = `
+        <span style="font-size: 1.25rem; font-weight: 700; color:${crColor};">${currentRatio >= 10 ? '> 10x' : currentRatio.toFixed(2) + 'x'}</span>
+        <span class="badge" style="background: rgba(0,0,0,0.05); color:${crColor}; margin-left: 6px;">${crStatus}</span>
+      `;
+    }
+
+    const elNW = document.getElementById('bsNetWorthValue');
+    if (elNW) {
+      elNW.innerText = CashTrackerStorage.formatRupiah(netWorth);
+      elNW.style.color = netWorth >= 0 ? 'var(--income)' : 'var(--expense)';
+    }
+  },
+
+  renderView() {
+    const container = document.getElementById('bsContentContainer');
+    if (!container) return;
+
+    const accounts = window.storage.getCalculatedAccounts();
+    const fixedAssets = window.storage.data.fixedAssets || [];
+    const receivables = window.storage.data.receivables || [];
+    const debts = window.storage.data.debts || [];
+
+    const totalCash = window.storage.getTotalCashAndBank();
+    const totalRec = window.storage.getTotalReceivables();
+    const totalCurrentAssets = totalCash + totalRec;
+    const totalFixedAssets = window.storage.getTotalFixedAssets();
+    const totalAssets = totalCurrentAssets + totalFixedAssets;
+
+    const totalShortDebts = window.storage.getTotalShortTermDebts();
+    const totalLongDebts = window.storage.getTotalLongTermDebts();
+    const totalDebts = totalShortDebts + totalLongDebts;
+    const netWorth = totalAssets - totalDebts;
+
+    if (this.viewMode === 'skontro') {
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+          
+          <!-- AKTIVA / ASET PRIBADI -->
+          <div class="card" style="border-top: 4px solid var(--income);">
+            <div class="card-header" style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+              <div class="card-title" style="color: var(--income); font-size: 1.1rem;">
+                ${icon('trending-up', 'w-5 h-5', 20)} AKTIVA (TOTAL ASET PRIBADI)
+              </div>
+              <div style="font-weight: 700; font-size: 1.1rem; color: var(--income);">
+                ${CashTrackerStorage.formatRupiah(totalAssets)}
+              </div>
+            </div>
+
+            <!-- I. ASET LANCAR / KAS -->
+            <div style="margin-top: 1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                <span>I. KAS & DANA LIKUID</span>
+                <span>${CashTrackerStorage.formatRupiah(totalCurrentAssets)}</span>
+              </div>
+              
+              <div style="padding: 8px 10px; border-bottom: 1px dashed var(--border-subtle);">
+                <div style="display:flex; justify-content:space-between; font-weight: 600; font-size: 0.85rem;">
+                  <span>Rekening Bank & Dompet</span>
+                  <span>${CashTrackerStorage.formatRupiah(totalCash)}</span>
+                </div>
+                <div style="padding-left: 8px; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                  ${accounts.map(a => `
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 2px;">
+                      <span>• ${a.name}</span>
+                      <span>${CashTrackerStorage.formatRupiah(a.currentBalance)}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              ${receivables.filter(r => r.status !== 'paid').length > 0 ? `
+                <div style="padding: 8px 10px;">
+                  <div style="display:flex; justify-content:space-between; font-weight: 600; font-size: 0.85rem;">
+                    <span>Piutang Pribadi</span>
+                    <span>${CashTrackerStorage.formatRupiah(totalRec)}</span>
+                  </div>
+                  <div style="padding-left: 8px; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                    ${receivables.filter(r => r.status !== 'paid').map(r => `
+                      <div style="display:flex; justify-content:space-between;">
+                        <span>• ${r.debtorName}</span>
+                        <span>${CashTrackerStorage.formatRupiah(r.amount)}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- II. ASET TETAP & INVESTASI PRIBADI -->
+            <div style="margin-top: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                <span>II. ASET TETAP & INVESTASI</span>
+                <span>${CashTrackerStorage.formatRupiah(totalFixedAssets)}</span>
+              </div>
+              <div style="padding: 8px 10px;">
+                ${fixedAssets.map(a => `
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding: 6px 0; border-bottom: 1px dotted var(--border-subtle); font-size: 0.85rem;">
+                    <div>
+                      <div style="font-weight: 600;">${a.name}</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">${a.category}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 6px;">
+                      <span style="font-weight: 700;">${CashTrackerStorage.formatRupiah(a.currentValue || a.purchaseValue)}</span>
+                      <button class="btn btn-secondary btn-sm no-print" onclick="BalanceSheetModule.openEditAssetModal('${a.id}')" title="Edit">
+                        ${icon('edit', 'w-3 h-3', 12)}
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+                <div class="no-print" style="margin-top: 10px; text-align: center;">
+                  <button class="btn btn-secondary btn-sm" onclick="BalanceSheetModule.openAddAssetModal()">
+                    ${icon('plus', 'w-3.5 h-3.5', 14)} Tambah Aset Pribadi
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; display:flex; justify-content:space-between; align-items:center; font-weight: 800; font-size: 1rem; color: var(--income);">
+              <span>TOTAL ASET</span>
+              <span>${CashTrackerStorage.formatRupiah(totalAssets)}</span>
+            </div>
+          </div>
+
+          <!-- PASIVA / KEWAJIBAN & EKUITAS PRIBADI -->
+          <div class="card" style="border-top: 4px solid var(--expense);">
+            <div class="card-header" style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+              <div class="card-title" style="color: var(--expense); font-size: 1.1rem;">
+                ${icon('scale', 'w-5 h-5', 20)} PASIVA (HUTANG & NET WORTH)
+              </div>
+              <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">
+                ${CashTrackerStorage.formatRupiah(totalAssets)}
+              </div>
+            </div>
+
+            <!-- I. HUTANG JANGKA PENDEK -->
+            <div style="margin-top: 1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                <span>I. HUTANG JANGKA PENDEK</span>
+                <span style="color: var(--warning);">${CashTrackerStorage.formatRupiah(totalShortDebts)}</span>
+              </div>
+              <div style="padding: 8px 10px;">
+                ${debts.filter(d => d.category === 'Jangka Pendek' && d.status === 'active').map(d => `
+                  <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom: 1px dotted var(--border-subtle); font-size: 0.85rem;">
+                    <div>
+                      <div style="font-weight: 600;">${d.creditorName}</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">Tempo Tgl ${d.dueDayOfMonth}</div>
+                    </div>
+                    <span style="font-weight: 700; color: var(--expense);">${CashTrackerStorage.formatRupiah(d.remainingAmount)}</span>
+                  </div>
+                `).join('') || '<div style="font-size: 12px; color: var(--text-muted); padding: 4px 0;">Tidak ada hutang jangka pendek.</div>'}
+              </div>
+            </div>
+
+            <!-- II. HUTANG JANGKA PANJANG -->
+            <div style="margin-top: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                <span>II. HUTANG JANGKA PANJANG (KPR/CICILAN)</span>
+                <span style="color: var(--expense);">${CashTrackerStorage.formatRupiah(totalLongDebts)}</span>
+              </div>
+              <div style="padding: 8px 10px;">
+                ${debts.filter(d => d.category === 'Jangka Panjang' && d.status === 'active').map(d => `
+                  <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom: 1px dotted var(--border-subtle); font-size: 0.85rem;">
+                    <div>
+                      <div style="font-weight: 600;">${d.creditorName}</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">${CashTrackerStorage.formatRupiah(d.monthlyPayment)} /bln</div>
+                    </div>
+                    <span style="font-weight: 700; color: var(--expense);">${CashTrackerStorage.formatRupiah(d.remainingAmount)}</span>
+                  </div>
+                `).join('') || '<div style="font-size: 12px; color: var(--text-muted); padding: 4px 0;">Tidak ada pinjaman jangka panjang.</div>'}
+              </div>
+            </div>
+
+            <!-- III. EKUITAS (NET WORTH) -->
+            <div style="margin-top: 1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                <span>III. KEKAYAAN BERSIH PRIBADI (NET WORTH)</span>
+                <span style="color: var(--income);">${CashTrackerStorage.formatRupiah(netWorth)}</span>
+              </div>
+              <div style="padding: 10px; font-size: 0.85rem;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span>Kekayaan Bersih Anda</span>
+                  <span style="font-weight: 700;">${CashTrackerStorage.formatRupiah(netWorth)}</span>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                  (Total Seluruh Aset - Total Seluruh Hutang)
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 10px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; display:flex; justify-content:space-between; align-items:center; font-weight: 800; font-size: 1rem; color: var(--text-main);">
+              <span>TOTAL PASIVA</span>
+              <span>${CashTrackerStorage.formatRupiah(totalDebts + netWorth)}</span>
+            </div>
+          </div>
+
+        </div>
+      `;
+    } else {
+      // Stafel Mode (Laporan Vertikal)
+      container.innerHTML = `
+        <div class="card" style="max-width: 760px; margin: 0 auto;">
+          <div style="text-align: center; border-bottom: 2px solid var(--border-strong); padding-bottom: 1rem; margin-bottom: 1.25rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 800; text-transform: uppercase;">Neraca Keuangan Pribadi</h2>
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">Per Tanggal: ${new Date().toLocaleDateString('id-ID', { dateStyle: 'full' })}</div>
+            <div style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">${window.storage.data.settings?.userName || 'Keuangan Pribadi'}</div>
+          </div>
+
+          <h3 style="color: var(--income); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">A. ASET PRIBADI</h3>
+          
+          <div style="padding-left: 0.75rem; margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; font-weight: 700; border-bottom: 1px solid var(--border-subtle); padding: 4px 0;">
+              <span>1. KAS & REKENING BANK</span>
+              <span>${CashTrackerStorage.formatRupiah(totalCurrentAssets)}</span>
+            </div>
+            <div style="padding-left: 0.75rem; font-size: 0.85rem;">
+              <div style="display:flex; justify-content:space-between; padding: 3px 0;">
+                <span>• Saldo Rekening & Dompet Tunai</span>
+                <span>${CashTrackerStorage.formatRupiah(totalCash)}</span>
+              </div>
+              ${totalRec > 0 ? `
+                <div style="display:flex; justify-content:space-between; padding: 3px 0;">
+                  <span>• Piutang Pribadi</span>
+                  <span>${CashTrackerStorage.formatRupiah(totalRec)}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div style="padding-left: 0.75rem; margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; font-weight: 700; border-bottom: 1px solid var(--border-subtle); padding: 4px 0;">
+              <span>2. ASET TETAP & INVESTASI</span>
+              <span>${CashTrackerStorage.formatRupiah(totalFixedAssets)}</span>
+            </div>
+            <div style="padding-left: 0.75rem; font-size: 0.85rem;">
+              ${fixedAssets.map(a => `
+                <div style="display:flex; justify-content:space-between; padding: 3px 0;">
+                  <span>• ${a.name} (${a.category})</span>
+                  <span>${CashTrackerStorage.formatRupiah(a.currentValue || a.purchaseValue)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-weight: 800; font-size: 0.95rem; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px; margin-bottom: 1.5rem;">
+            <span>TOTAL ASET</span>
+            <span style="color: var(--income);">${CashTrackerStorage.formatRupiah(totalAssets)}</span>
+          </div>
+
+          <h3 style="color: var(--expense); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">B. KEWAJIBAN & KEKAYAAN BERSIH</h3>
+
+          <div style="padding-left: 0.75rem; margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; font-weight: 700; border-bottom: 1px solid var(--border-subtle); padding: 4px 0;">
+              <span>1. TOTAL HUTANG</span>
+              <span>${CashTrackerStorage.formatRupiah(totalDebts)}</span>
+            </div>
+            <div style="padding-left: 0.75rem; font-size: 0.85rem;">
+              <div style="display:flex; justify-content:space-between; padding: 3px 0;">
+                <span>• Hutang Jangka Pendek (Kartu Kredit & Paylater)</span>
+                <span>${CashTrackerStorage.formatRupiah(totalShortDebts)}</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding: 3px 0;">
+                <span>• Hutang Jangka Panjang (KPR & Kendaraan)</span>
+                <span>${CashTrackerStorage.formatRupiah(totalLongDebts)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding-left: 0.75rem; margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; font-weight: 700; border-bottom: 1px solid var(--border-subtle); padding: 4px 0;">
+              <span>2. KEKAYAAN BERSIH (NET WORTH)</span>
+              <span>${CashTrackerStorage.formatRupiah(netWorth)}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-weight: 800; font-size: 0.95rem; background: var(--bg-card-hover); padding: 6px 10px; border-radius: 6px;">
+            <span>TOTAL PASIVA (HUTANG + NET WORTH)</span>
+            <span style="color: var(--text-main);">${CashTrackerStorage.formatRupiah(totalDebts + netWorth)}</span>
+          </div>
+        </div>
+      `;
+    }
+  },
+
+  printReport() {
+    window.print();
+  },
+
+  render() {
+    this.renderHealthMetrics();
+    this.renderView();
+  }
+};
+
+
+// --- reminders.js ---
+// ==========================================================================
+// Cash Tracker - Reminders Module (Reminder Jatuh Tempo Pengeluaran yang Harus Dibayar)
+// Tracks due dates, overdue alerts, countdown, and 1-Click Pay & Record Expense
+// ==========================================================================
+
+const RemindersModule = {
+  activeFilter: 'all', // 'all', 'upcoming', 'overdue', 'paid'
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    const amountInput = document.getElementById('remAmountInput');
+    if (amountInput) {
+      amountInput.addEventListener('input', (e) => {
+        const val = CashTrackerStorage.parseRupiah(e.target.value);
+        e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+      });
+    }
+
+    document.querySelectorAll('[data-rem-filter]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-rem-filter]').forEach(b => b.classList.remove('active', 'btn-primary'));
+        btn.classList.add('active', 'btn-primary');
+        this.activeFilter = btn.getAttribute('data-rem-filter');
+        this.renderTable();
+      });
+    });
+  },
+
+  populateReminderCategories() {
+    const sel = document.getElementById('remCategorySelect');
+    if (!sel) return;
+    sel.innerHTML = window.storage.data.expenseCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+  },
+
+  populateReminderAccounts() {
+    const sel = document.getElementById('remAccountSelect');
+    if (!sel) return;
+    const accounts = window.storage.getCalculatedAccounts();
+    sel.innerHTML = accounts.map(a => `<option value="${a.id}">${a.name} (Saldo: ${CashTrackerStorage.formatRupiah(a.currentBalance)})</option>`).join('');
+  },
+
+  openAddModal() {
+    const modal = document.getElementById('reminderModal');
+    if (!modal) return;
+    document.getElementById('reminderForm').reset();
+    document.getElementById('remEditId').value = '';
+    document.getElementById('remDueDateInput').value = getDateOffset(7);
+    this.populateReminderCategories();
+    this.populateReminderAccounts();
+    document.getElementById('remModalTitle').innerText = 'Tambah Pengingat Tagihan Jatuh Tempo';
+    modal.classList.add('active');
+  },
+
+  openEditModal(id) {
+    const item = (window.storage.data.reminders || []).find(r => r.id === id);
+    if (!item) return;
+
+    const modal = document.getElementById('reminderModal');
+    document.getElementById('remEditId').value = item.id;
+    document.getElementById('remTitleInput').value = item.title || '';
+    document.getElementById('remAmountInput').value = CashTrackerStorage.formatRupiah(item.amount, false);
+    document.getElementById('remDueDateInput').value = item.dueDate || '';
+    document.getElementById('remFrequencySelect').value = item.frequency || 'monthly';
+    
+    this.populateReminderCategories();
+    this.populateReminderAccounts();
+    if (item.category) document.getElementById('remCategorySelect').value = item.category;
+    if (item.accountId) document.getElementById('remAccountSelect').value = item.accountId;
+
+    document.getElementById('remNotesInput').value = item.notes || '';
+    document.getElementById('remModalTitle').innerText = 'Edit Pengingat Tagihan';
+    modal.classList.add('active');
+  },
+
+  saveFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('remEditId').value;
+    const title = document.getElementById('remTitleInput').value.trim();
+    const amount = CashTrackerStorage.parseRupiah(document.getElementById('remAmountInput').value);
+    const dueDate = document.getElementById('remDueDateInput').value;
+    const frequency = document.getElementById('remFrequencySelect').value;
+    const category = document.getElementById('remCategorySelect').value;
+    const accountId = document.getElementById('remAccountSelect').value;
+    const notes = document.getElementById('remNotesInput').value.trim();
+
+    if (!title || !amount || !dueDate) {
+      AppUI.showToast('Harap lengkapi judul tagihan, nominal, dan tanggal jatuh tempo!', 'error');
+      return;
+    }
+
+    if (id) {
+      const idx = window.storage.data.reminders.findIndex(r => r.id === id);
+      if (idx !== -1) {
+        window.storage.data.reminders[idx] = {
+          ...window.storage.data.reminders[idx],
+          title, amount, dueDate, frequency, category, accountId, notes
+        };
+        AppUI.showToast('Pengingat tagihan diperbarui!', 'success');
+      }
+    } else {
+      const newRem = {
+        id: 'rem_' + Date.now(),
+        title, amount, dueDate, frequency, category, accountId, notes,
+        isPaid: false
+      };
+      window.storage.data.reminders.unshift(newRem);
+      AppUI.showToast('Pengingat tagihan berhasil disimpan!', 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('reminderModal').classList.remove('active');
+    window.app.refreshAll();
+  },
+
+  getDaysDifference(dueDateStr) {
+    if (!dueDateStr) return 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDateStr);
+    due.setHours(0, 0, 0, 0);
+    const diffTime = due.getTime() - today.getTime();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24));
+  },
+
+  payBillNow(id) {
+    const item = (window.storage.data.reminders || []).find(r => r.id === id);
+    if (!item) return;
+
+    const accounts = window.storage.getCalculatedAccounts();
+    const accOptions = accounts.map((a, i) => `${i + 1}. ${a.name} (Saldo: ${CashTrackerStorage.formatRupiah(a.currentBalance)})`).join('\n');
+    
+    const choice = prompt(
+      `KONFIRMASI PEMBAYARAN TAGIHAN:\n` +
+      `Tagihan: ${item.title}\n` +
+      `Nominal: ${CashTrackerStorage.formatRupiah(item.amount)}\n\n` +
+      `Pilih Nomor Rekening Sumber Dana:\n${accOptions}\n\nMasukkan nomor pilihan (1-${accounts.length}):`,
+      "1"
+    );
+
+    if (!choice) return;
+    const selectedIdx = parseInt(choice, 10) - 1;
+    const chosenAcc = accounts[selectedIdx] || accounts[0];
+
+    // 1. Record transaction
+    const newTx = {
+      id: 'trx_' + Date.now(),
+      type: 'expense',
+      date: new Date().toISOString().split('T')[0],
+      amount: item.amount,
+      category: item.category || 'Tagihan & Utilitas (Listrik, Wifi, Air)',
+      accountId: chosenAcc.id,
+      notes: `Pembayaran Jatuh Tempo: ${item.title} (${item.notes || ''})`
+    };
+    window.storage.data.transactions.unshift(newTx);
+
+    // 2. Advance due date if monthly, or mark paid if one-time
+    if (item.frequency === 'monthly') {
+      const currentDue = new Date(item.dueDate);
+      currentDue.setMonth(currentDue.getMonth() + 1);
+      item.dueDate = currentDue.toISOString().split('T')[0];
+      item.lastPaidDate = new Date().toISOString().split('T')[0];
+      AppUI.showToast(`Tagihan "${item.title}" lunas! Jatuh tempo dimajukan ke bulan depan (${CashTrackerStorage.formatDateID(item.dueDate)}).`, 'success');
+    } else {
+      item.isPaid = true;
+      item.lastPaidDate = new Date().toISOString().split('T')[0];
+      AppUI.showToast(`Tagihan "${item.title}" berhasil dibayar lunas!`, 'success');
+    }
+
+    window.storage.save();
+    window.app.refreshAll();
+  },
+
+  deleteReminder(id) {
+    if (!confirm('Hapus pengingat tagihan ini?')) return;
+    window.storage.data.reminders = window.storage.data.reminders.filter(r => r.id !== id);
+    window.storage.save();
+    AppUI.showToast('Pengingat tagihan dihapus.', 'info');
+    window.app.refreshAll();
+  },
+
+  renderTable() {
+    const tbody = document.getElementById('remTableBody');
+    if (!tbody) return;
+
+    let list = [...(window.storage.data.reminders || [])];
+
+    // Sort by due date ascending (soonest first)
+    list.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+    if (this.activeFilter === 'upcoming') {
+      list = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) >= 0 && this.getDaysDifference(r.dueDate) <= 7);
+    } else if (this.activeFilter === 'overdue') {
+      list = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) < 0);
+    } else if (this.activeFilter === 'paid') {
+      list = list.filter(r => r.isPaid);
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            ${icon('bell', 'w-8 h-8', 32)}
+            <div style="margin-top: 8px; font-weight: 500;">Tidak ada jadwal tagihan pada filter ini. Semua terkendali!</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = list.map(item => {
+      const daysDiff = this.getDaysDifference(item.dueDate);
+      let statusBadge = '';
+      let rowStyle = '';
+
+      if (item.isPaid) {
+        statusBadge = `<span class="badge badge-income">${icon('check', 'w-3 h-3', 12)} Lunas</span>`;
+      } else if (daysDiff < 0) {
+        statusBadge = `<span class="badge badge-expense">${icon('alert-triangle', 'w-3 h-3', 12)} Terlambat (${Math.abs(daysDiff)} hari lalu)</span>`;
+        rowStyle = 'background-color: rgba(244, 63, 94, 0.05);';
+      } else if (daysDiff === 0) {
+        statusBadge = `<span class="badge badge-expense" style="animation: pulse 1.5s infinite;">Jatuh Tempo HARI INI</span>`;
+        rowStyle = 'background-color: rgba(244, 63, 94, 0.08);';
+      } else if (daysDiff <= 7) {
+        statusBadge = `<span class="badge badge-warning">${icon('clock', 'w-3 h-3', 12)} H-${daysDiff} (${daysDiff} hari lagi)</span>`;
+      } else {
+        statusBadge = `<span class="badge badge-info">${daysDiff} hari lagi</span>`;
+      }
+
+      const freqStr = item.frequency === 'monthly' ? 'Bulanan' : (item.frequency === 'weekly' ? 'Mingguan' : (item.frequency === 'yearly' ? 'Tahunan' : 'Sekali Bayar'));
+
+      return `
+        <tr style="${rowStyle}">
+          <td>
+            <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">${item.title}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${item.notes || '-'}</div>
+          </td>
+          <td>
+            <span class="badge badge-purple">${item.category || 'Tagihan'}</span>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Frekuensi: ${freqStr}</div>
+          </td>
+          <td style="text-align: right; font-size: 1rem; font-weight: 700; color: var(--expense);">
+            ${CashTrackerStorage.formatRupiah(item.amount)}
+          </td>
+          <td>
+            <div style="font-weight: 600;">${CashTrackerStorage.formatDateID(item.dueDate)}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${item.dueDate}</div>
+          </td>
+          <td style="text-align: center;">
+            ${statusBadge}
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            ${!item.isPaid ? `
+              <button class="btn btn-success btn-sm" onclick="RemindersModule.payBillNow('${item.id}')" title="Bayar Sekarang & Catat Pengeluaran">
+                ${icon('check-circle', 'w-3.5 h-3.5', 14)} Bayar Sekarang
+              </button>
+            ` : ''}
+            <button class="btn btn-secondary btn-sm" onclick="RemindersModule.openEditModal('${item.id}')" title="Edit">
+              ${icon('edit', 'w-3.5 h-3.5', 14)}
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="RemindersModule.deleteReminder('${item.id}')" title="Hapus">
+              ${icon('trash', 'w-3.5 h-3.5', 14)}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  renderBanner() {
+    const banner = document.getElementById('globalDueBanner');
+    if (!banner) return;
+
+    const list = window.storage.data.reminders || [];
+    const urgentItems = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) <= 7);
+    const overdueItems = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) < 0);
+
+    const urgentTotal = urgentItems.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+
+    if (urgentItems.length === 0) {
+      banner.style.display = 'none';
+      return;
+    }
+
+    banner.style.display = 'flex';
+    banner.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #f43f5e; color: white;">
+          ${icon('bell-ring', 'w-4 h-4', 16)}
+        </span>
+        <div>
+          <strong>Pemberitahuan Tagihan:</strong> Ada <strong>${urgentItems.length} pengeluaran</strong> ${overdueItems.length > 0 ? `(termasuk ${overdueItems.length} terlambat)` : 'yang mendekati jatuh tempo'} minggu ini dengan total <strong>${CashTrackerStorage.formatRupiah(urgentTotal)}</strong>.
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-danger btn-sm" onclick="app.switchTab('reminders')">
+          Lihat & Bayar Tagihan
+        </button>
+      </div>
+    `;
+  },
+
+  renderSummary() {
+    const list = window.storage.data.reminders || [];
+    const overdue = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) < 0);
+    const upcoming7 = list.filter(r => !r.isPaid && this.getDaysDifference(r.dueDate) >= 0 && this.getDaysDifference(r.dueDate) <= 7);
+    const allPending = list.filter(r => !r.isPaid);
+
+    const sumPending = allPending.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+    const sumOverdue = overdue.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+
+    const elPending = document.getElementById('remPendingTotal');
+    if (elPending) elPending.innerText = CashTrackerStorage.formatRupiah(sumPending);
+
+    const elOverdueCount = document.getElementById('remOverdueCount');
+    if (elOverdueCount) elOverdueCount.innerText = `${overdue.length} Tagihan (${CashTrackerStorage.formatRupiah(sumOverdue)})`;
+
+    const elUpcomingCount = document.getElementById('remUpcomingCount');
+    if (elUpcomingCount) elUpcomingCount.innerText = `${upcoming7.length} Tagihan`;
+
+    // Notification badge in sidebar
+    const badge = document.getElementById('sidebarDueBadge');
+    if (badge) {
+      const urgentCount = overdue.length + upcoming7.length;
+      if (urgentCount > 0) {
+        badge.innerText = urgentCount;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  },
+
+  render() {
+    this.renderBanner();
+    this.renderSummary();
+    this.renderTable();
+  }
+};
+
+
+// --- calculator.js ---
+// ==========================================================================
+// Cash Tracker - Calculator Module (Kalkulator Tabungan & Target Finansial)
+// Goal saving calculator, compound return, emergency fund & active targets
+// ==========================================================================
+
+const CalculatorModule = {
+  activeCalcTab: 'goal', // 'goal', 'emergency', 'payoff'
+
+  init() {
+    this.bindEvents();
+    this.render();
+  },
+
+  bindEvents() {
+    // Mask rupiah inputs in calculator
+    ['calcTargetAmount', 'calcInitialAmount', 'calcMonthlySave', 'calcEmergencyMonthlyExpense', 'goalModalTarget', 'goalModalCurrent'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', (e) => {
+          const val = CashTrackerStorage.parseRupiah(e.target.value);
+          e.target.value = val ? CashTrackerStorage.formatRupiah(val, false) : '';
+        });
+      }
+    });
+
+    // Sub-tab toggles
+    document.querySelectorAll('[data-calc-tab]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-calc-tab]').forEach(b => b.classList.remove('active', 'btn-primary'));
+        btn.classList.add('active', 'btn-primary');
+        this.activeCalcTab = btn.getAttribute('data-calc-tab');
+        this.renderActiveCalcView();
+      });
+    });
+
+    // Auto-calculate on input changes
+    const calcInputs = ['calcTargetAmount', 'calcInitialAmount', 'calcMonths', 'calcReturnRate', 'calcCalcMode', 'calcMonthlySave'];
+    calcInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => this.calculateSavingsGoal());
+        el.addEventListener('change', () => this.calculateSavingsGoal());
+      }
+    });
+
+    const emInputs = ['calcEmergencyMonthlyExpense', 'calcEmergencyProfile'];
+    emInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => this.calculateEmergencyFund());
+        el.addEventListener('change', () => this.calculateEmergencyFund());
+      }
+    });
+  },
+
+  renderActiveCalcView() {
+    document.getElementById('calcViewGoal').style.display = this.activeCalcTab === 'goal' ? 'block' : 'none';
+    document.getElementById('calcViewEmergency').style.display = this.activeCalcTab === 'emergency' ? 'block' : 'none';
+    if (this.activeCalcTab === 'goal') this.calculateSavingsGoal();
+    if (this.activeCalcTab === 'emergency') this.calculateEmergencyFund();
+  },
+
+  // --- 1. Savings Goal Calculation ---
+  calculateSavingsGoal() {
+    const target = CashTrackerStorage.parseRupiah(document.getElementById('calcTargetAmount')?.value) || 50000000;
+    const initial = CashTrackerStorage.parseRupiah(document.getElementById('calcInitialAmount')?.value) || 0;
+    const mode = document.getElementById('calcCalcMode')?.value || 'byMonths'; // 'byMonths' or 'bySavings'
+    const annualRate = parseFloat(document.getElementById('calcReturnRate')?.value) || 0;
+    const monthlyRate = annualRate > 0 ? (annualRate / 100) / 12 : 0;
+
+    let months = parseInt(document.getElementById('calcMonths')?.value, 10) || 12;
+    let monthlySavings = CashTrackerStorage.parseRupiah(document.getElementById('calcMonthlySave')?.value) || 2000000;
+
+    // Toggle input field visibility based on mode
+    const groupMonths = document.getElementById('groupCalcMonths');
+    const groupMonthlySave = document.getElementById('groupCalcMonthlySave');
+
+    if (mode === 'byMonths') {
+      if (groupMonths) groupMonths.style.display = 'block';
+      if (groupMonthlySave) groupMonthlySave.style.display = 'none';
+
+      // Formula: Solve for PMT (Monthly Savings needed)
+      // FV = PV*(1+r)^n + PMT * [((1+r)^n - 1) / r]
+      const remainingTarget = target - (initial * Math.pow(1 + monthlyRate, months));
+      if (remainingTarget <= 0) {
+        monthlySavings = 0;
+      } else if (monthlyRate === 0) {
+        monthlySavings = remainingTarget / months;
+      } else {
+        const factor = (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+        monthlySavings = remainingTarget / factor;
+      }
+    } else {
+      if (groupMonths) groupMonths.style.display = 'none';
+      if (groupMonthlySave) groupMonthlySave.style.display = 'block';
+
+      // Solve for n (Months needed)
+      if (monthlySavings <= 0) {
+        months = 999;
+      } else {
+        let current = initial;
+        let m = 0;
+        while (current < target && m < 600) {
+          m++;
+          current = current * (1 + monthlyRate) + monthlySavings;
+        }
+        months = m;
+      }
+    }
+
+    // Display summary results
+    const elResultSave = document.getElementById('calcResultMonthlySave');
+    if (elResultSave) elResultSave.innerText = CashTrackerStorage.formatRupiah(Math.ceil(monthlySavings));
+
+    const elResultMonths = document.getElementById('calcResultMonths');
+    if (elResultMonths) elResultMonths.innerText = `${months} Bulan (${(months / 12).toFixed(1)} Tahun)`;
+
+    const totalContributed = initial + (monthlySavings * months);
+    const estimatedInterest = Math.max(0, target - totalContributed);
+
+    const elTotalSave = document.getElementById('calcResultTotalContributed');
+    if (elTotalSave) elTotalSave.innerText = CashTrackerStorage.formatRupiah(totalContributed);
+
+    const elTotalInterest = document.getElementById('calcResultInterest');
+    if (elTotalInterest) elTotalInterest.innerText = CashTrackerStorage.formatRupiah(estimatedInterest);
+
+    // Build Simulation Table (show first 12 months or up to total months)
+    this.renderSimulationTable(initial, monthlySavings, monthlyRate, months, target);
+  },
+
+  renderSimulationTable(initial, monthlySave, monthlyRate, totalMonths, target) {
+    const tbody = document.getElementById('calcSimulationTableBody');
+    if (!tbody) return;
+
+    let balance = initial;
+    let html = '';
+    const displayCount = Math.min(totalMonths, 24); // Show up to 24 months
+
+    for (let m = 1; m <= displayCount; m++) {
+      const startBalance = balance;
+      const interestEarned = balance * monthlyRate;
+      balance = startBalance + interestEarned + monthlySave;
+      const progressPct = Math.min(100, Math.round((balance / target) * 100));
+
+      html += `
+        <tr>
+          <td style="font-weight: 600;">Bulan ${m}</td>
+          <td>${CashTrackerStorage.formatRupiah(startBalance)}</td>
+          <td style="color: var(--income); font-weight: 600;">+ ${CashTrackerStorage.formatRupiah(monthlySave)}</td>
+          <td style="color: var(--info);">+ ${CashTrackerStorage.formatRupiah(interestEarned)}</td>
+          <td style="font-weight: 700; color: var(--text-main);">${CashTrackerStorage.formatRupiah(balance)}</td>
+          <td>
+            <div style="display:flex; align-items:center; gap: 8px;">
+              <div style="flex:1; height:6px; background:var(--border-subtle); border-radius:999px; overflow:hidden;">
+                <div style="width:${progressPct}%; height:100%; background:var(--primary);"></div>
+              </div>
+              <span style="font-size:11px; font-weight:600;">${progressPct}%</span>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    if (totalMonths > 24) {
+      html += `
+        <tr>
+          <td colspan="6" style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 12px;">
+            ... Dan seterusnya hingga Bulan ke-${totalMonths} (Target ${CashTrackerStorage.formatRupiah(target)} Tercapai!) ...
+          </td>
+        </tr>
+      `;
+    }
+
+    tbody.innerHTML = html;
+  },
+
+  // Save current calculated goal to User's Active Goals
+  saveGoalToActive() {
+    const target = CashTrackerStorage.parseRupiah(document.getElementById('calcTargetAmount')?.value) || 50000000;
+    const initial = CashTrackerStorage.parseRupiah(document.getElementById('calcInitialAmount')?.value) || 0;
+    const months = parseInt(document.getElementById('calcMonths')?.value, 10) || 12;
+
+    const titlePrompt = prompt('Beri nama tujuan finansial ini:', 'Tabungan Masa Depan');
+    if (!titlePrompt) return;
+
+    const newGoal = {
+      id: 'gl_' + Date.now(),
+      title: titlePrompt.trim(),
+      targetAmount: target,
+      currentAmount: initial,
+      deadlineDate: getDateOffset(months * 30),
+      monthlyContribution: Math.ceil((target - initial) / months),
+      category: 'Target Tabungan',
+      notes: `Target ${months} bulan`
+    };
+
+    window.storage.data.savingsGoals.unshift(newGoal);
+    window.storage.save();
+    AppUI.showToast(`Target "${newGoal.title}" berhasil ditambahkan ke daftar target aktif!`, 'success');
+    this.renderActiveGoals();
+  },
+
+  // --- 2. Emergency Fund Calculation ---
+  calculateEmergencyFund() {
+    // Get average monthly expense or user input
+    let monthlyExpense = CashTrackerStorage.parseRupiah(document.getElementById('calcEmergencyMonthlyExpense')?.value);
+    
+    if (!monthlyExpense || monthlyExpense <= 0) {
+      // Calculate from existing expenses
+      const monthlyStats = window.storage.getMonthlyStats();
+      monthlyExpense = monthlyStats.totalExpense > 0 ? monthlyStats.totalExpense : 5000000;
+      const elInput = document.getElementById('calcEmergencyMonthlyExpense');
+      if (elInput && !elInput.value) {
+        elInput.value = CashTrackerStorage.formatRupiah(monthlyExpense, false);
+      }
+    }
+
+    const profile = document.getElementById('calcEmergencyProfile')?.value || 'single';
+    let multiplier = 3;
+    let profileTitle = 'Lajang (Single)';
+    let profileDesc = 'Kebutuhan standar 3-6 bulan pengeluaran untuk antisipasi keadaan darurat.';
+
+    if (profile === 'single') {
+      multiplier = 6;
+      profileTitle = 'Lajang / Belum Menikah (6x)';
+      profileDesc = 'Ideal 6 bulan pengeluaran rutin.';
+    } else if (profile === 'married') {
+      multiplier = 9;
+      profileTitle = 'Menikah tanpa tanggungan (9x)';
+      profileDesc = 'Rekomendasi 9 bulan pengeluaran rumah tangga.';
+    } else if (profile === 'family') {
+      multiplier = 12;
+      profileTitle = 'Berkeluarga dengan Anak / Usaha (12x)';
+      profileDesc = 'Kesiapan maksimal 12 bulan pengeluaran untuk keamanan keluarga & usaha.';
+    }
+
+    const idealEmergencyFund = monthlyExpense * multiplier;
+    const currentLiquidCash = window.storage.getTotalCashAndBank();
+    const readinessPct = Math.min(100, Math.round((currentLiquidCash / idealEmergencyFund) * 100));
+    const deficit = Math.max(0, idealEmergencyFund - currentLiquidCash);
+
+    const elTarget = document.getElementById('calcEmergencyTarget');
+    if (elTarget) elTarget.innerText = CashTrackerStorage.formatRupiah(idealEmergencyFund);
+
+    const elCurrent = document.getElementById('calcEmergencyCurrentCash');
+    if (elCurrent) elCurrent.innerText = CashTrackerStorage.formatRupiah(currentLiquidCash);
+
+    const elDeficit = document.getElementById('calcEmergencyDeficit');
+    if (elDeficit) {
+      elDeficit.innerText = deficit === 0 ? 'TERPENUHI (Dana Darurat Aman!)' : `Kurang: ${CashTrackerStorage.formatRupiah(deficit)}`;
+      elDeficit.style.color = deficit === 0 ? 'var(--income)' : 'var(--expense)';
+    }
+
+    const elProgress = document.getElementById('calcEmergencyProgressBar');
+    if (elProgress) {
+      elProgress.style.width = `${readinessPct}%`;
+      elProgress.style.backgroundColor = readinessPct >= 100 ? 'var(--income)' : (readinessPct >= 50 ? 'var(--warning)' : 'var(--expense)');
+    }
+
+    const elPctText = document.getElementById('calcEmergencyPctText');
+    if (elPctText) elPctText.innerText = `${readinessPct}% Terkumpul`;
+  },
+
+  // --- Active Goals Management ---
+  openAddGoalModal() {
+    const modal = document.getElementById('goalModal');
+    if (!modal) return;
+    document.getElementById('goalForm').reset();
+    document.getElementById('goalEditId').value = '';
+    document.getElementById('goalModalDeadline').value = getDateOffset(180);
+    modal.classList.add('active');
+  },
+
+  saveGoalFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('goalEditId').value;
+    const title = document.getElementById('goalModalTitleInput').value.trim();
+    const targetAmount = CashTrackerStorage.parseRupiah(document.getElementById('goalModalTarget').value);
+    const currentAmount = CashTrackerStorage.parseRupiah(document.getElementById('goalModalCurrent').value);
+    const deadlineDate = document.getElementById('goalModalDeadline').value;
+    const category = document.getElementById('goalModalCategory').value.trim() || 'Tabungan';
+
+    if (!title || !targetAmount) {
+      AppUI.showToast('Judul dan target nominal wajib diisi!', 'error');
+      return;
+    }
+
+    if (id) {
+      const idx = window.storage.data.savingsGoals.findIndex(g => g.id === id);
+      if (idx !== -1) {
+        window.storage.data.savingsGoals[idx] = {
+          ...window.storage.data.savingsGoals[idx],
+          title, targetAmount, currentAmount, deadlineDate, category
+        };
+        AppUI.showToast('Target tabungan berhasil diperbarui!', 'success');
+      }
+    } else {
+      const newGoal = {
+        id: 'gl_' + Date.now(),
+        title, targetAmount, currentAmount, deadlineDate, category,
+        notes: ''
+      };
+      window.storage.data.savingsGoals.unshift(newGoal);
+      AppUI.showToast('Target tabungan baru berhasil dibuat!', 'success');
+    }
+
+    window.storage.save();
+    document.getElementById('goalModal').classList.remove('active');
+    this.renderActiveGoals();
+  },
+
+  topUpGoal(id) {
+    const goal = (window.storage.data.savingsGoals || []).find(g => g.id === id);
+    if (!goal) return;
+
+    const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
+    const promptVal = prompt(
+      `SETOR TABUNGAN KE: "${goal.title}"\n` +
+      `Terkumpul: ${CashTrackerStorage.formatRupiah(goal.currentAmount)} / ${CashTrackerStorage.formatRupiah(goal.targetAmount)}\n` +
+      `Sisa Target: ${CashTrackerStorage.formatRupiah(remaining)}\n\n` +
+      `Masukkan nominal setoran tambahan hari ini:`,
+      "1000000"
+    );
+
+    if (!promptVal) return;
+    const addVal = CashTrackerStorage.parseRupiah(promptVal);
+    if (addVal <= 0) return;
+
+    goal.currentAmount = (goal.currentAmount || 0) + addVal;
+
+    // Optional: Also offer to record as Expense/Transfer from account
+    const recordAsTx = confirm(`Apakah Anda ingin mencatat setoran ${CashTrackerStorage.formatRupiah(addVal)} ini sebagai transaksi pengeluaran tabungan di pembukuan?`);
+    if (recordAsTx) {
+      const newTx = {
+        id: 'trx_' + Date.now(),
+        type: 'expense',
+        date: new Date().toISOString().split('T')[0],
+        amount: addVal,
+        category: 'Belanja Modal / Inventory',
+        accountId: window.storage.data.accounts[0]?.id || 'acc_1',
+        notes: `Setor tabungan target: ${goal.title}`
+      };
+      window.storage.data.transactions.unshift(newTx);
+    }
+
+    window.storage.save();
+    AppUI.showToast(`Berhasil menambah setoran ${CashTrackerStorage.formatRupiah(addVal)} ke target "${goal.title}"!`, 'success');
+    window.app.refreshAll();
+  },
+
+  deleteGoal(id) {
+    if (!confirm('Hapus target tabungan ini?')) return;
+    window.storage.data.savingsGoals = window.storage.data.savingsGoals.filter(g => g.id !== id);
+    window.storage.save();
+    AppUI.showToast('Target tabungan dihapus.', 'info');
+    this.renderActiveGoals();
+  },
+
+  renderActiveGoals() {
+    const container = document.getElementById('activeGoalsContainer');
+    if (!container) return;
+
+    const goals = window.storage.data.savingsGoals || [];
+    if (goals.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">
+          ${icon('target', 'w-8 h-8', 32)}
+          <div style="margin-top: 8px;">Belum ada target tabungan aktif. Klik tombol di atas untuk membuat target impian Anda!</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = goals.map(g => {
+      const pct = Math.min(100, Math.round(((g.currentAmount || 0) / (g.targetAmount || 1)) * 100));
+      const remaining = Math.max(0, g.targetAmount - (g.currentAmount || 0));
+      const isReached = pct >= 100;
+
+      return `
+        <div class="card" style="border-top: 4px solid ${isReached ? 'var(--income)' : 'var(--primary)'};">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <span class="badge badge-purple" style="font-size: 10px; margin-bottom: 4px;">${g.category || 'Tabungan'}</span>
+              <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-main);">${g.title}</h4>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                ${icon('calendar', 'w-3 h-3', 12)} Target Selesai: ${CashTrackerStorage.formatDateID(g.deadlineDate)}
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 1.25rem; font-weight: 800; color: ${isReached ? 'var(--income)' : 'var(--primary)'};">${pct}%</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div style="margin-top: 1rem;">
+            <div style="display:flex; justify-content:space-between; font-size: 11px; font-weight: 600; margin-bottom: 4px;">
+              <span>Terkumpul: ${CashTrackerStorage.formatRupiah(g.currentAmount)}</span>
+              <span>Target: ${CashTrackerStorage.formatRupiah(g.targetAmount)}</span>
+            </div>
+            <div style="height: 8px; width: 100%; background: var(--bg-card-hover); border-radius: 999px; overflow: hidden;">
+              <div style="width: ${pct}%; height: 100%; background: ${isReached ? 'var(--income)' : 'linear-gradient(90deg, #10b981, #059669)'};"></div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); font-size: 0.8rem;">
+            <span style="color: var(--text-muted);">Sisa: <strong>${CashTrackerStorage.formatRupiah(remaining)}</strong></span>
+            <div style="display:flex; gap: 6px;">
+              <button class="btn btn-primary btn-sm" onclick="CalculatorModule.topUpGoal('${g.id}')">
+                ${icon('plus', 'w-3 h-3', 12)} Setor Tabungan
+              </button>
+              <button class="btn btn-outline-danger btn-sm" onclick="CalculatorModule.deleteGoal('${g.id}')">
+                ${icon('trash', 'w-3 h-3', 12)}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  render() {
+    this.renderActiveCalcView();
+    this.renderActiveGoals();
+  }
+};
+
+
+// --- app.js ---
+// ==========================================================================
+// Cash Tracker - Core Application Controller (Personal Finance Edition)
+// Handles desktop sidebar, mobile bottom navigation, FAB, and responsive charts
+// ==========================================================================
+
+const AppUI = {
+  showToast(message, type = 'info', duration = 3500) {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    let iconName = 'info';
+    if (type === 'success') iconName = 'check-circle';
+    if (type === 'error') iconName = 'alert-circle';
+    if (type === 'warning') iconName = 'alert-triangle';
+
+    toast.innerHTML = `
+      <span style="color: var(--${type === 'error' ? 'expense' : (type === 'success' ? 'income' : 'info')});">
+        ${icon(iconName, 'w-5 h-5', 20)}
+      </span>
+      <div style="flex: 1; font-weight: 500;">${message}</div>
+      <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="this.parentElement.remove()">
+        ${icon('x', 'w-4 h-4', 16)}
+      </button>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(15px)';
+      toast.style.transition = 'all 0.25s ease';
+      setTimeout(() => toast.remove(), 250);
+    }, duration);
+  }
+};
+
+class CashTrackerApp {
+  constructor() {
+    this.currentTab = 'dashboard';
+  }
+
+  init() {
+    const savedTheme = window.storage.data.settings?.theme || 'light';
+    this.setTheme(savedTheme);
+
+    // Desktop & Mobile Sidebar clicks
+    document.querySelectorAll('[data-nav-tab]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = item.getAttribute('data-nav-tab');
+        this.switchTab(tab);
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar) sidebar.classList.remove('open');
+      });
+    });
+
+    // Mobile Bottom Navigation clicks
+    document.querySelectorAll('[data-mobile-tab]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = item.getAttribute('data-mobile-tab');
+        this.switchTab(tab);
+      });
+    });
+
+    // Mobile sidebar toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    if (mobileBtn) {
+      mobileBtn.addEventListener('click', () => {
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar) sidebar.classList.toggle('open');
+      });
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        this.setTheme(next);
+      });
+    }
+
+    // Modal close listeners
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    });
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = btn.closest('.modal-backdrop');
+        if (modal) modal.classList.remove('active');
+      });
+    });
+
+    // Submodules (Personal Finance)
+    AccountsModule.init();
+    TransactionsModule.init();
+    DebtsModule.init();
+    BalanceSheetModule.init();
+    RemindersModule.init();
+    CalculatorModule.init();
+
+    this.refreshAll();
+    renderAllIcons();
+
+    window.addEventListener('resize', () => {
+      if (this.currentTab === 'dashboard') {
+        this.renderDashboardCharts();
+      }
+    });
+  }
+
+  setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    window.storage.data.settings = window.storage.data.settings || {};
+    window.storage.data.settings.theme = theme;
+    window.storage.save();
+
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.innerHTML = theme === 'dark' ? icon('sun', 'w-5 h-5', 20) : icon('moon', 'w-5 h-5', 20);
+    }
+
+    if (this.currentTab === 'dashboard') {
+      this.renderDashboardCharts();
+    }
+  }
+
+  switchTab(tabName) {
+    this.currentTab = tabName;
+
+    // Desktop nav items
+    document.querySelectorAll('[data-nav-tab]').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-nav-tab') === tabName);
+    });
+
+    // Mobile nav items
+    document.querySelectorAll('[data-mobile-tab]').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-mobile-tab') === tabName);
+    });
+
+    // Tab panels
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+      panel.classList.remove('active');
+    });
+
+    const activePanel = document.getElementById(`tab-${tabName}`);
+    if (activePanel) {
+      activePanel.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const titleMap = {
+      dashboard: 'Ringkasan Finansial',
+      transactions: 'Pemasukan & Pengeluaran',
+      debts: 'Kewajiban & Hutang',
+      balancesheet: 'Neraca Keuangan Pribadi',
+      reminders: 'Reminder Jatuh Tempo',
+      calculator: 'Kalkulator Tabungan',
+      settings: 'Pengaturan & Backup'
+    };
+    const titleEl = document.getElementById('navbarPageTitle');
+    if (titleEl) titleEl.innerText = titleMap[tabName] || 'Cash Tracker';
+
+    if (tabName === 'dashboard') this.renderDashboard();
+    if (tabName === 'transactions') TransactionsModule.render();
+    if (tabName === 'debts') DebtsModule.render();
+    if (tabName === 'balancesheet') BalanceSheetModule.render();
+    if (tabName === 'reminders') RemindersModule.render();
+    if (tabName === 'calculator') CalculatorModule.render();
+  }
+
+  renderDashboardStats() {
+    const totalCash = window.storage.getTotalCashAndBank();
+    const netWorth = window.storage.getNetWorth();
+    const totalFixedAssets = window.storage.getTotalFixedAssets();
+    const totalDebts = window.storage.getTotalDebts();
+    const monthlyStats = window.storage.getMonthlyStats();
+
+    const elCash = document.getElementById('dashTotalCash');
+    if (elCash) elCash.innerText = CashTrackerStorage.formatRupiah(totalCash);
+
+    const elNetWorth = document.getElementById('dashNetWorth');
+    if (elNetWorth) {
+      elNetWorth.innerText = CashTrackerStorage.formatRupiah(netWorth);
+      elNetWorth.style.color = netWorth >= 0 ? 'var(--income)' : 'var(--expense)';
+    }
+
+    const elIncome = document.getElementById('dashMonthlyIncome');
+    if (elIncome) elIncome.innerText = CashTrackerStorage.formatRupiah(monthlyStats.totalIncome);
+
+    const elExpense = document.getElementById('dashMonthlyExpense');
+    if (elExpense) elExpense.innerText = CashTrackerStorage.formatRupiah(monthlyStats.totalExpense);
+
+    const elFixed = document.getElementById('dashFixedAssetsVal');
+    if (elFixed) elFixed.innerText = CashTrackerStorage.formatRupiah(totalFixedAssets);
+
+    const elDebt = document.getElementById('dashTotalDebts');
+    if (elDebt) elDebt.innerText = CashTrackerStorage.formatRupiah(totalDebts);
+  }
+
+  renderDashboardCharts() {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const now = new Date();
+    const labels = [];
+    const incomeData = [];
+    const expenseData = [];
+
+    // Show 6 months on desktop, 4 months on mobile for clear view
+    const monthsBack = window.innerWidth < 480 ? 3 : 5;
+    for (let i = monthsBack; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const mIdx = d.getMonth();
+      const yr = d.getFullYear();
+      labels.push(`${monthNames[mIdx]} '${String(yr).slice(-2)}`);
+
+      const stats = window.storage.getMonthlyStats(yr, mIdx + 1);
+      incomeData.push(stats.totalIncome);
+      expenseData.push(stats.totalExpense);
+    }
+
+    AppCharts.renderBarComparison('dashCashflowCanvas', labels, incomeData, expenseData);
+
+    // Expense Categories Donut
+    const expenseCatMap = {};
+    (window.storage.data.transactions || []).forEach(tx => {
+      if (tx.type === 'expense') {
+        const cat = tx.category || 'Lain-lain';
+        expenseCatMap[cat] = (expenseCatMap[cat] || 0) + Number(tx.amount || 0);
+      }
+    });
+
+    const expenseDonutData = Object.keys(expenseCatMap).map((cat, idx) => ({
+      label: cat,
+      value: expenseCatMap[cat],
+      color: AppCharts.colors[idx % AppCharts.colors.length]
+    })).sort((a, b) => b.value - a.value);
+
+    AppCharts.renderDoughnut('dashExpenseDonutCanvas', 'dashExpenseDonutLegend', expenseDonutData);
+
+    // Income Categories Donut
+    const incomeCatMap = {};
+    (window.storage.data.transactions || []).forEach(tx => {
+      if (tx.type === 'income') {
+        const cat = tx.category || 'Lain-lain';
+        incomeCatMap[cat] = (incomeCatMap[cat] || 0) + Number(tx.amount || 0);
+      }
+    });
+
+    const incomeDonutData = Object.keys(incomeCatMap).map((cat, idx) => ({
+      label: cat,
+      value: incomeCatMap[cat],
+      color: AppCharts.colors[(idx + 2) % AppCharts.colors.length]
+    })).sort((a, b) => b.value - a.value);
+
+    AppCharts.renderDoughnut('dashIncomeDonutCanvas', 'dashIncomeDonutLegend', incomeDonutData);
+
+    // Balance Sheet Visual: Liquid Cash vs Fixed Assets vs Short & Long Debts
+    const currentAssets = window.storage.getTotalCurrentAssets();
+    const fixedAssets = window.storage.getTotalFixedAssets();
+    const shortDebts = window.storage.getTotalShortTermDebts();
+    const longDebts = window.storage.getTotalLongTermDebts();
+
+    AppCharts.renderBalanceComparison('dashBalanceBarCanvas', currentAssets, fixedAssets, shortDebts, longDebts);
+  }
+
+  renderRecentTransactions() {
+    const list = [...(window.storage.data.transactions || [])];
+    list.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const recent = list.slice(0, 5);
+
+    const tbody = document.getElementById('dashRecentTxBody');
+    if (!tbody) return;
+
+    if (recent.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:1.25rem; color:var(--text-muted);">Belum ada riwayat transaksi.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = recent.map(t => {
+      const isIncome = t.type === 'income';
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:600; font-size:12px;">${CashTrackerStorage.formatDateID(t.date)}</div>
+          </td>
+          <td>
+            <div style="font-weight:600; font-size:12px;">${t.category}</div>
+            <div style="font-size:10px; color:var(--text-muted);">${t.notes || '-'}</div>
+          </td>
+          <td style="text-align:right; font-weight:700; font-size:12px; color:${isIncome ? 'var(--income)' : 'var(--expense)'}; white-space:nowrap;">
+            ${isIncome ? '+' : '-'} ${CashTrackerStorage.formatRupiah(t.amount)}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  renderDashboard() {
+    this.renderDashboardStats();
+    this.renderDashboardCharts();
+    this.renderRecentTransactions();
+  }
+
+  refreshAll() {
+    RemindersModule.renderBanner();
+    AccountsModule.render();
+    this.renderDashboardStats();
+    if (this.currentTab === 'dashboard') {
+      this.renderDashboard();
+    } else if (this.currentTab === 'transactions') {
+      TransactionsModule.render();
+    } else if (this.currentTab === 'debts') {
+      DebtsModule.render();
+    } else if (this.currentTab === 'balancesheet') {
+      BalanceSheetModule.render();
+    } else if (this.currentTab === 'reminders') {
+      RemindersModule.render();
+    } else if (this.currentTab === 'calculator') {
+      CalculatorModule.render();
+    }
+    RemindersModule.renderSummary();
+  }
+}
+
+window.app = new CashTrackerApp();
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.app.init();
+});
+
+
+</script>
 
 </body>
 </html>
