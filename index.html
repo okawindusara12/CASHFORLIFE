@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#059669">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Cash Tracker - Personal Finance & Net Worth Tracker</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app-container">
+  
+  <!-- ================= SIDEBAR NAVIGATION (DESKTOP & TABLET) ================= -->
+  <aside class="app-sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <div class="brand-badge">
+        <div class="brand-icon">
+          <span data-icon="wallet" data-icon-class="w-6 h-6" data-icon-size="24"></span>
+        </div>
+        <div>
+          <div style="line-height: 1.1;">CASH TRACKER</div>
+          <div style="font-size: 10px; color: var(--sidebar-muted); font-weight: 500;">Personal Finance Edition</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-group-label">Keuangan Harian</div>
+      
+      <a class="nav-item active" data-nav-tab="dashboard">
+        <span data-icon="piechart" data-icon-class="w-5 h-5"></span>
+        <span>Dashboard Finansial</span>
+      </a>
+
+      <a class="nav-item" data-nav-tab="transactions">
+        <span data-icon="arrow-down-left" data-icon-class="w-5 h-5"></span>
+        <span>Pemasukan & Pengeluaran</span>
+      </a>
+
+      <div class="nav-group-label">Kekayaan & Neraca Pribadi</div>
+
+      <a class="nav-item" data-nav-tab="balancesheet">
+        <span data-icon="scale" data-icon-class="w-5 h-5"></span>
+        <span>Neraca & Aset Pribadi</span>
+      </a>
+
+      <a class="nav-item" data-nav-tab="debts">
+        <span data-icon="credit-card" data-icon-class="w-5 h-5"></span>
+        <span>Hutang & Kewajiban</span>
+      </a>
+
+      <div class="nav-group-label">Perencanaan Finansial</div>
+
+      <a class="nav-item" data-nav-tab="reminders">
+        <span data-icon="bell" data-icon-class="w-5 h-5"></span>
+        <span>Reminder Jatuh Tempo</span>
+        <span class="nav-badge" id="sidebarDueBadge" style="display: none;">0</span>
+      </a>
+
+      <a class="nav-item" data-nav-tab="calculator">
+        <span data-icon="calculator" data-icon-class="w-5 h-5"></span>
+        <span>Kalkulator Tabungan</span>
+      </a>
+
+      <div class="nav-group-label">Pengaturan</div>
+
+      <a class="nav-item" data-nav-tab="settings">
+        <span data-icon="download" data-icon-class="w-5 h-5"></span>
+        <span>Backup & Data Pribadi</span>
+      </a>
+    </nav>
+
+    <div style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: var(--sidebar-muted);">
+      <div>100% Offline & Privasi Terjaga</div>
+      <div style="margin-top: 3px; color: #34d399; font-weight: 600;">● Data Aman di Perangkat Anda</div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="app-main">
+    
+    <!-- Top Navbar -->
+    <header class="top-navbar">
+      <div class="page-title-box">
+        <button class="btn btn-secondary btn-icon mobile-toggle" id="mobileMenuBtn" aria-label="Menu">
+          <span data-icon="filter" data-icon-class="w-5 h-5"></span>
+        </button>
+        <h1 class="page-title" id="navbarPageTitle">Ringkasan Finansial</h1>
+      </div>
+
+      <div class="navbar-actions">
+        <button class="btn btn-success btn-sm" onclick="TransactionsModule.openAddModal('income')">
+          <span data-icon="plus" data-icon-class="w-4 h-4" data-icon-size="16"></span>
+          <span>+ Pemasukan</span>
+        </button>
+
+        <button class="btn btn-danger btn-sm" onclick="TransactionsModule.openAddModal('expense')">
+          <span data-icon="plus" data-icon-class="w-4 h-4" data-icon-size="16"></span>
+          <span>- Pengeluaran</span>
+        </button>
+
+        <button class="btn btn-secondary btn-icon" id="themeToggleBtn" title="Ganti Tema">
+          <span data-icon="moon" data-icon-class="w-5 h-5"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Due Date Alert Banner -->
+    <div id="globalDueBanner" class="due-reminder-banner" style="display: none;"></div>
+
+    <div class="content-body">
+      
+      <!-- ================= TAB 1: DASHBOARD ================= -->
+      <section class="tab-panel active" id="tab-dashboard">
+        
+        <!-- Metric Cards Row -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem;">
+          
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: var(--income);">
+              <span data-icon="wallet" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Total Saldo Kas & Bank</div>
+              <div class="stat-value" id="dashTotalCash">Rp 0</div>
+              <div class="stat-subtext" style="color: var(--income);">
+                <span data-icon="shield" data-icon-class="w-3 h-3" data-icon-size="12"></span> Dana Cair Siap Pakai
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(2, 132, 199, 0.15); color: var(--info);">
+              <span data-icon="scale" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Kekayaan Bersih (Net Worth)</div>
+              <div class="stat-value" id="dashNetWorth">Rp 0</div>
+              <div class="stat-subtext">Total Aset - Total Hutang</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: var(--income);">
+              <span data-icon="arrow-down-left" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Pemasukan Bulan Ini</div>
+              <div class="stat-value" id="dashMonthlyIncome" style="color: var(--income);">Rp 0</div>
+              <div class="stat-subtext">Gaji & Penghasilan</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(244, 63, 94, 0.15); color: var(--expense);">
+              <span data-icon="arrow-up-right" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Pengeluaran Bulan Ini</div>
+              <div class="stat-value" id="dashMonthlyExpense" style="color: var(--expense);">Rp 0</div>
+              <div class="stat-subtext">Belanja, Makan & Tagihan</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: var(--purple);">
+              <span data-icon="building" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Aset Tetap & Investasi</div>
+              <div class="stat-value" id="dashFixedAssetsVal">Rp 0</div>
+              <div class="stat-subtext">Rumah, Kendaraan, Emas</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(244, 63, 94, 0.15); color: var(--expense);">
+              <span data-icon="credit-card" data-icon-class="w-5 h-5" data-icon-size="22"></span>
+            </div>
+            <div>
+              <div class="stat-label">Total Hutang Pribadi</div>
+              <div class="stat-value" id="dashTotalDebts" style="color: var(--expense);">Rp 0</div>
+              <div class="stat-subtext">KPR, Kendaraan & Paylater</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Charts Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
+          
+          <!-- Cashflow Bar Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="barchart" data-icon-class="w-5 h-5"></span>
+                Arus Kas: Pemasukan vs Pengeluaran
+              </div>
+              <div style="display: flex; gap: 10px; font-size: 11px; font-weight: 600;">
+                <span style="display: flex; align-items: center; gap: 3px; color: var(--income);">
+                  <span style="width: 8px; height: 8px; background: var(--income); border-radius: 2px;"></span> Masuk
+                </span>
+                <span style="display: flex; align-items: center; gap: 3px; color: var(--expense);">
+                  <span style="width: 8px; height: 8px; background: var(--expense); border-radius: 2px;"></span> Keluar
+                </span>
+              </div>
+            </div>
+            <div style="position: relative; width: 100%;">
+              <canvas id="dashCashflowCanvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Balance Sheet Comparison Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="scale" data-icon-class="w-5 h-5"></span>
+                Komposisi Neraca: Aset vs Hutang
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="app.switchTab('balancesheet')">
+                Lihat Neraca →
+              </button>
+            </div>
+            <div style="position: relative; width: 100%;">
+              <canvas id="dashBalanceBarCanvas"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Donut Breakdown & Recent Transactions -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="piechart" data-icon-class="w-5 h-5"></span>
+                Kategori Pengeluaran
+              </div>
+            </div>
+            <div style="position: relative; width: 100%;">
+              <canvas id="dashExpenseDonutCanvas"></canvas>
+            </div>
+            <div id="dashExpenseDonutLegend" style="margin-top: 0.75rem; max-height: 120px; overflow-y: auto;"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="trending-up" data-icon-class="w-5 h-5"></span>
+                Sumber Pendapatan
+              </div>
+            </div>
+            <div style="position: relative; width: 100%;">
+              <canvas id="dashIncomeDonutCanvas"></canvas>
+            </div>
+            <div id="dashIncomeDonutLegend" style="margin-top: 0.75rem; max-height: 120px; overflow-y: auto;"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="clock" data-icon-class="w-5 h-5"></span>
+                Transaksi Terkini
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="app.switchTab('transactions')">
+                Semua
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th style="text-align: right;">Nominal</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentTxBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 2: TRANSACTIONS ================= -->
+      <section class="tab-panel" id="tab-transactions">
+        
+        <!-- Accounts Header & Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+              <span data-icon="landmark" data-icon-class="w-4 h-4"></span>
+              Akun Simpanan, Bank & Debet (BRI, BNI, BCA, dll)
+            </h3>
+            <div style="font-size: 11px; color: var(--text-muted);">Kelola dompet dan rekening sumber dana Anda</div>
+          </div>
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" onclick="AccountsModule.openAddModal()">
+              <span data-icon="plus" data-icon-class="w-3.5 h-3.5"></span> + Tambah Akun / Bank
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="AccountsModule.openTransferModal()">
+              <span data-icon="arrow-left-right" data-icon-class="w-3.5 h-3.5"></span> Pindah Dana / Transfer
+            </button>
+          </div>
+        </div>
+
+        <!-- Account Balance Cards -->
+        <div id="txAccountsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;"></div>
+
+        <!-- Summary Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div class="card" style="padding: 1rem;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total Pemasukan</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--income); margin-top: 3px;" id="txSumIncome">Rp 0</div>
+          </div>
+          <div class="card" style="padding: 1rem;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total Pengeluaran</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--expense); margin-top: 3px;" id="txSumExpense">Rp 0</div>
+          </div>
+          <div class="card" style="padding: 1rem;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Arus Kas Bersih (Net)</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--income); margin-top: 3px;" id="txSumNet">Rp 0</div>
+          </div>
+        </div>
+
+        <!-- Transactions Table Card -->
+        <div class="card">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button class="btn btn-sm btn-primary active" data-tx-filter="all">Semua</button>
+              <button class="btn btn-sm btn-secondary" data-tx-filter="income">Pemasukan</button>
+              <button class="btn btn-sm btn-secondary" data-tx-filter="expense">Pengeluaran</button>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; align-items: center; width: 100%; max-width: 320px;">
+              <input type="text" id="txSearchInput" class="form-input" placeholder="Cari transaksi..." style="flex: 1; padding: 0.4rem 0.65rem;">
+              <button class="btn btn-secondary btn-sm" onclick="window.storage.exportTransactionsCSV()" title="CSV">
+                <span data-icon="download" data-icon-class="w-4 h-4"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Jenis</th>
+                  <th>Sumber / Kategori</th>
+                  <th>Rekening</th>
+                  <th style="text-align: right;">Nominal</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="txTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 3: BALANCE SHEET (NERACA PRIBADI) ================= -->
+      <section class="tab-panel" id="tab-balancesheet">
+        
+        <div class="card" style="margin-bottom: 1.25rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(2, 132, 199, 0.05) 100%);">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+            <div class="card-title">
+              <span data-icon="shield" data-icon-class="w-5 h-5"></span>
+              Kesehatan Finansial Pribadi
+            </div>
+            <div style="display: flex; gap: 0.35rem;" class="no-print">
+              <button class="btn btn-secondary btn-sm active" data-bs-view="skontro">2 Kolom</button>
+              <button class="btn btn-secondary btn-sm" data-bs-view="stafel">Vertikal</button>
+              <button class="btn btn-primary btn-sm" onclick="BalanceSheetModule.printReport()">
+                <span data-icon="printer" data-icon-class="w-4 h-4"></span> Cetak
+              </button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div>
+              <div style="font-size: 0.725rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted);">Kekayaan Bersih Pribadi (Net Worth)</div>
+              <div id="bsNetWorthValue" style="font-size: 1.4rem; font-weight: 800; margin-top: 2px;">Rp 0</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Total Aset Pribadi - Total Hutang</div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.725rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted);">Debt-to-Asset Ratio (DAR)</div>
+              <div id="bsDARValue" style="display: flex; align-items: center; margin-top: 2px;">0%</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Porsi hutang terhadap aset pribadi (Aman &lt; 35%)</div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.725rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted);">Rasio Likuiditas Kas</div>
+              <div id="bsCRValue" style="display: flex; align-items: center; margin-top: 2px;">0x</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Kemampuan kas menutup hutang jangka pendek</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="bsContentContainer"></div>
+
+      </section>
+
+
+      <!-- ================= TAB 4: DEBTS (HUTANG PRIBADI) ================= -->
+      <section class="tab-panel" id="tab-debts">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(244, 63, 94, 0.15); color: var(--expense);">
+              <span data-icon="credit-card" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Total Sisa Pokok Hutang</div>
+              <div class="stat-value" id="debtTotalAmount" style="color: var(--expense);">Rp 0</div>
+              <div class="stat-subtext">Kewajiban Pribadi</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+              <span data-icon="clock" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Hutang Jangka Pendek</div>
+              <div class="stat-value" id="debtShortTermAmount">Rp 0</div>
+              <div class="stat-subtext">Kartu Kredit & Paylater</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: var(--purple);">
+              <span data-icon="building" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Hutang Jangka Panjang</div>
+              <div class="stat-value" id="debtLongTermAmount">Rp 0</div>
+              <div class="stat-subtext">KPR & Cicilan Kendaraan</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(2, 132, 199, 0.15); color: var(--info);">
+              <span data-icon="calendar" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Total Cicilan per Bulan</div>
+              <div class="stat-value" id="debtMonthlyTotal">Rp 0</div>
+              <div class="stat-subtext">Beban Bulanan Rutin</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; gap: 0.35rem;">
+              <button class="btn btn-sm btn-primary active" data-dbt-filter="all">Semua</button>
+              <button class="btn btn-sm btn-secondary" data-dbt-filter="short">Jangka Pendek</button>
+              <button class="btn btn-sm btn-secondary" data-dbt-filter="long">Jangka Panjang</button>
+            </div>
+
+            <div>
+              <button class="btn btn-danger btn-sm" onclick="DebtsModule.openAddModal()">
+                <span data-icon="plus" data-icon-class="w-4 h-4"></span> Catat Hutang Baru
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Kreditor / Pinjaman</th>
+                  <th>Kategori</th>
+                  <th style="text-align: right;">Total Plafon</th>
+                  <th style="text-align: right;">Sisa Pokok</th>
+                  <th style="text-align: right;">Angsuran /bln</th>
+                  <th style="text-align: center;">Status</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="debtsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 5: REMINDERS (JATUH TEMPO) ================= -->
+      <section class="tab-panel" id="tab-reminders">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(244, 63, 94, 0.15); color: var(--expense);">
+              <span data-icon="bell-ring" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Tagihan Belum Dibayar</div>
+              <div class="stat-value" id="remPendingTotal" style="color: var(--expense);">Rp 0</div>
+              <div class="stat-subtext">Perlu Disiapkan</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(244, 63, 94, 0.15); color: var(--expense);">
+              <span data-icon="alert-triangle" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Terlambat (Overdue)</div>
+              <div class="stat-value" id="remOverdueCount" style="color: var(--expense);">0 Tagihan</div>
+              <div class="stat-subtext">Segera Dibayar!</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+              <span data-icon="clock" data-icon-class="w-5 h-5"></span>
+            </div>
+            <div>
+              <div class="stat-label">Jatuh Tempo 7 Hari ke Depan</div>
+              <div class="stat-value" id="remUpcomingCount">0 Tagihan</div>
+              <div class="stat-subtext">Mendekati Deadline</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button class="btn btn-sm btn-primary active" data-rem-filter="all">Semua</button>
+              <button class="btn btn-sm btn-secondary" data-rem-filter="upcoming">H-7</button>
+              <button class="btn btn-sm btn-secondary" data-rem-filter="overdue">Terlambat</button>
+              <button class="btn btn-sm btn-secondary" data-rem-filter="paid">Lunas</button>
+            </div>
+
+            <div>
+              <button class="btn btn-primary btn-sm" onclick="RemindersModule.openAddModal()">
+                <span data-icon="plus" data-icon-class="w-4 h-4"></span> Tambah Tagihan
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Nama Tagihan</th>
+                  <th>Kategori & Siklus</th>
+                  <th style="text-align: right;">Nominal</th>
+                  <th>Jatuh Tempo</th>
+                  <th style="text-align: center;">Status</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="remTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 6: CALCULATOR TABUNGAN ================= -->
+      <section class="tab-panel" id="tab-calculator">
+        
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
+          <button class="btn btn-primary active" data-calc-tab="goal">
+            <span data-icon="target" data-icon-class="w-4 h-4"></span> Target Tabungan
+          </button>
+          <button class="btn btn-secondary" data-calc-tab="emergency">
+            <span data-icon="shield" data-icon-class="w-4 h-4"></span> Dana Darurat
+          </button>
+        </div>
+
+        <!-- Mode 1: Target Tabungan View -->
+        <div id="calcViewGoal">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
+            
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span data-icon="calculator" data-icon-class="w-5 h-5"></span>
+                  Simulasi Tabungan Impian
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Target Nominal yang Ingin Dicapai (Rp)</label>
+                <input type="text" id="calcTargetAmount" class="form-input" value="50.000.000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tabungan Awal Saat Ini (Rp)</label>
+                <input type="text" id="calcInitialAmount" class="form-input" value="10.000.000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Metode Perhitungan</label>
+                <select id="calcCalcMode" class="form-select">
+                  <option value="byMonths">Berdasarkan Target Waktu (Bulan) -> Hitung Setoran Bulanan</option>
+                  <option value="bySavings">Berdasarkan Kemampuan Nabung -> Hitung Berapa Bulan Selesai</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="groupCalcMonths">
+                <label class="form-label">Target Waktu (Bulan)</label>
+                <input type="number" id="calcMonths" class="form-input" value="12" min="1" max="240">
+              </div>
+
+              <div class="form-group" id="groupCalcMonthlySave" style="display: none;">
+                <label class="form-label">Kemampuan Menabung per Bulan (Rp)</label>
+                <input type="text" id="calcMonthlySave" class="form-input" value="3.500.000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Estimasi Bunga / Return Investasi per Tahun (% p.a.)</label>
+                <input type="number" id="calcReturnRate" class="form-input" value="6" step="0.1" min="0" max="40">
+              </div>
+
+              <button class="btn btn-primary" style="width: 100%; margin-top: 0.35rem;" onclick="CalculatorModule.saveGoalToActive()">
+                <span data-icon="plus" data-icon-class="w-4 h-4"></span> Simpan ke Target Finansial Saya
+              </button>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%);">
+              <div class="card-header">
+                <div class="card-title" style="color: var(--primary);">
+                  <span data-icon="sparkles" data-icon-class="w-5 h-5"></span>
+                  Hasil Rencana Tabungan
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <div style="font-size: 0.775rem; color: var(--text-muted); font-weight: 600;">TABUNGAN HARUS DISISIHKAN PER BULAN:</div>
+                <div id="calcResultMonthlySave" style="font-size: 1.85rem; font-weight: 800; color: var(--primary); margin-top: 2px;">Rp 0</div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; border-top: 1px solid var(--border-subtle); padding-top: 0.75rem; margin-bottom: 1rem;">
+                <div>
+                  <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Waktu Diperlukan</div>
+                  <div id="calcResultMonths" style="font-size: 1.1rem; font-weight: 700;">12 Bulan</div>
+                </div>
+
+                <div>
+                  <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Total Setoran Pribadi</div>
+                  <div id="calcResultTotalContributed" style="font-size: 1.1rem; font-weight: 700;">Rp 0</div>
+                </div>
+
+                <div style="grid-column: 1/-1;">
+                  <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Estimasi Keuntungan Bunga / Compound Return</div>
+                  <div id="calcResultInterest" style="font-size: 1.1rem; font-weight: 700; color: var(--income);">Rp 0</div>
+                </div>
+              </div>
+
+              <div style="background: var(--bg-card); padding: 0.85rem; border-radius: 0.5rem; border: 1px solid var(--border-subtle); font-size: 0.8rem;">
+                <strong>💡 Tips Menabung:</strong> Langsung sisihkan di awal saat menerima gaji agar tidak terpakai untuk belanja konsumtif.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Simulation Table -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="calendar" data-icon-class="w-5 h-5"></span>
+                Tabel Pertumbuhan Saldo Bulan per Bulan
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Bulan</th>
+                    <th>Saldo Awal</th>
+                    <th>Setoran</th>
+                    <th>Bunga</th>
+                    <th>Saldo Akhir</th>
+                    <th>Progress</th>
+                  </tr>
+                </thead>
+                <tbody id="calcSimulationTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Dana Darurat View -->
+        <div id="calcViewEmergency" style="display: none;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
+            
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span data-icon="shield" data-icon-class="w-5 h-5"></span>
+                  Hitung Kesiapan Dana Darurat
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Rata-rata Pengeluaran Rutin Anda per Bulan (Rp)</label>
+                <input type="text" id="calcEmergencyMonthlyExpense" class="form-input" placeholder="Misal Rp 5.000.000">
+                <small style="color: var(--text-muted); font-size: 11px;">Makan, sewa/rumah, listrik, cicilan & transportasi.</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Profil Kehidupan & Tanggungan</label>
+                <select id="calcEmergencyProfile" class="form-select">
+                  <option value="single">Lajang / Belum Menikah (Standar 6 Bulan Pengeluaran)</option>
+                  <option value="married">Menikah tanpa tanggungan anak (Standar 9 Bulan)</option>
+                  <option value="family">Berkeluarga dengan anak / Freelancer (Standar 12 Bulan)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%);">
+              <div class="card-header">
+                <div class="card-title">Analisis Dana Darurat</div>
+              </div>
+
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">TARGET DANA DARURAT IDEAL:</div>
+                <div id="calcEmergencyTarget" style="font-size: 1.75rem; font-weight: 800; color: var(--info); margin-top: 2px;">Rp 0</div>
+              </div>
+
+              <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                  <span>Kas & Bank Tersedia: <strong id="calcEmergencyCurrentCash">Rp 0</strong></span>
+                  <span id="calcEmergencyPctText" style="font-weight: 700;">0%</span>
+                </div>
+                <div style="height: 8px; width: 100%; background: var(--bg-card-hover); border-radius: 999px; overflow: hidden;">
+                  <div id="calcEmergencyProgressBar" style="width: 0%; height: 100%; background: var(--income); transition: width 0.3s ease;"></div>
+                </div>
+              </div>
+
+              <div style="padding: 0.85rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle);">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">STATUS KESIAPAN:</div>
+                <div id="calcEmergencyDeficit" style="font-size: 1.05rem; font-weight: 700; margin-top: 2px;">-</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Active Financial Goals Section -->
+        <div style="margin-top: 1.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+              <span data-icon="target" data-icon-class="w-5 h-5"></span>
+              Target Finansial Aktif Saya
+            </h3>
+            <button class="btn btn-secondary btn-sm" onclick="CalculatorModule.openAddGoalModal()">
+              <span data-icon="plus" data-icon-class="w-3.5 h-3.5"></span> Buat Target
+            </button>
+          </div>
+
+          <div id="activeGoalsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.85rem;"></div>
+        </div>
+
+      </section>
+
+
+      <!-- ================= TAB 7: SETTINGS & BACKUP ================= -->
+      <section class="tab-panel" id="tab-settings">
+        
+        <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem;">
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="shield" data-icon-class="w-5 h-5"></span>
+                Identitas Pribadi
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Anda (Tampil di Neraca Keuangan Pribadi)</label>
+              <input type="text" id="settingsUserName" class="form-input" value="Keuangan Pribadi Saya">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="
+              window.storage.data.settings.userName = document.getElementById('settingsUserName').value.trim();
+              window.storage.save();
+              AppUI.showToast('Nama profil berhasil disimpan!', 'success');
+            ">Simpan Nama</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span data-icon="download" data-icon-class="w-5 h-5"></span>
+                Cadangan Data Pribadi (Backup & Restore)
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Seluruh catatan keuangan Anda tersimpan 100% lokal dan privat di browser HP / laptop ini. Anda dapat mengunduh file cadangan (*backup JSON*) kapan saja.
+            </p>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-sm" onclick="window.storage.exportToJSON()">
+                <span data-icon="download" data-icon-class="w-4 h-4"></span> Cadangkan Data (JSON)
+              </button>
+
+              <label class="btn btn-secondary btn-sm" style="cursor: pointer;">
+                <span data-icon="upload" data-icon-class="w-4 h-4"></span> Pulihkan Data (JSON)
+                <input type="file" accept=".json" style="display: none;" onchange="
+                  const file = this.files[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = (e) => {
+                    if (window.storage.importFromJSON(e.target.result)) {
+                      AppUI.showToast('Data berhasil dipulihkan!', 'success');
+                      location.reload();
+                    }
+                  };
+                  reader.readAsText(file);
+                ">
+              </label>
+
+              <button class="btn btn-secondary btn-sm" onclick="window.storage.exportTransactionsCSV()">
+                <span data-icon="download" data-icon-class="w-4 h-4"></span> Ekspor CSV Transaksi
+              </button>
+            </div>
+          </div>
+
+          <div class="card" style="border: 1px solid var(--expense-border);">
+            <div class="card-header">
+              <div class="card-title" style="color: var(--expense);">
+                <span data-icon="alert-triangle" data-icon-class="w-5 h-5"></span>
+                Reset Data
+              </div>
+            </div>
+            <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Kembalikan ke contoh data keuangan pribadi awal.
+            </p>
+            <button class="btn btn-outline-danger btn-sm" onclick="
+              if (confirm('Kembalikan ke data awal? Semua perubahan catatan Anda akan direset.')) {
+                window.storage.reset();
+                AppUI.showToast('Data telah direset.', 'info');
+                location.reload();
+              }
+            ">
+              <span data-icon="refresh-cw" data-icon-class="w-4 h-4"></span> Reset Data
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MOBILE FLOATING ACTION BUTTON (FAB) ================= -->
+  <button class="mobile-fab" onclick="TransactionsModule.openAddModal('expense')" title="Catat Pengeluaran Cepat" aria-label="Tambah Transaksi">
+    <span data-icon="plus" data-icon-class="w-7 h-7" data-icon-size="28"></span>
+  </button>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-nav-items">
+      <a class="mobile-nav-link active" data-mobile-tab="dashboard">
+        <span data-icon="piechart" data-icon-class="w-5 h-5" data-icon-size="20"></span>
+        <span>Ringkasan</span>
+      </a>
+
+      <a class="mobile-nav-link" data-mobile-tab="transactions">
+        <span data-icon="arrow-down-left" data-icon-class="w-5 h-5" data-icon-size="20"></span>
+        <span>Transaksi</span>
+      </a>
+
+      <a class="mobile-nav-link" data-mobile-tab="balancesheet">
+        <span data-icon="scale" data-icon-class="w-5 h-5" data-icon-size="20"></span>
+        <span>Neraca</span>
+      </a>
+
+      <a class="mobile-nav-link" data-mobile-tab="reminders">
+        <span data-icon="bell" data-icon-class="w-5 h-5" data-icon-size="20"></span>
+        <span>Tagihan</span>
+      </a>
+
+      <a class="mobile-nav-link" data-mobile-tab="calculator">
+        <span data-icon="calculator" data-icon-class="w-5 h-5" data-icon-size="20"></span>
+        <span>Tabungan</span>
+      </a>
+    </div>
+  </nav>
+
+</div>
+
+
+<!-- ================= MODALS ================= -->
+
+<!-- 1. Transaction Modal (Pemasukan / Pengeluaran) -->
+<div class="modal-backdrop" id="transactionModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="txModalTitle">Catat Transaksi</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="txForm" onsubmit="TransactionsModule.saveFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="txEditId">
+
+        <div class="form-group">
+          <label class="form-label">Jenis Transaksi</label>
+          <div style="display: flex; gap: 1.25rem;">
+            <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; color: var(--income);">
+              <input type="radio" name="txModalType" value="income" checked> Pemasukan
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; color: var(--expense);">
+              <input type="radio" name="txModalType" value="expense"> Pengeluaran
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nominal Rupiah (Rp)</label>
+          <input type="text" id="txAmountInput" class="form-input" placeholder="0" required style="font-size: 1.2rem; font-weight: 800;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Tanggal</label>
+            <input type="date" id="txDateInput" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Rekening / Dompet</label>
+            <select id="txAccountSelect" class="form-select"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kategori</label>
+          <select id="txCategorySelect" class="form-select"></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan (Opsional)</label>
+          <input type="text" id="txNotesInput" class="form-input" placeholder="Misal: Beli makan siang, gaji kantor...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 2. Personal Fixed Asset Modal -->
+<div class="modal-backdrop" id="assetModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="assetModalTitle">Tambah Aset Pribadi</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="assetForm" onsubmit="BalanceSheetModule.saveAssetFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="assetEditId">
+
+        <div class="form-group">
+          <label class="form-label">Nama Aset Pribadi</label>
+          <input type="text" id="assetNameInput" class="form-input" placeholder="Contoh: Rumah Tinggal, Mobil Honda, Emas Antam" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Kategori Aset</label>
+            <select id="assetCategorySelect" class="form-select">
+              <option value="Properti">Properti & Rumah</option>
+              <option value="Kendaraan">Kendaraan (Mobil/Motor)</option>
+              <option value="Investasi Jangka Panjang">Logam Mulia / Emas</option>
+              <option value="Investasi Likuid">Reksadana / Saham / Obligasi</option>
+              <option value="Elektronik & Alat">Gadget, Laptop & Elektronik</option>
+              <option value="Lainnya">Aset Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Perolehan</label>
+            <input type="date" id="assetDateInput" class="form-input">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Harga Beli / Perolehan (Rp)</label>
+            <input type="text" id="assetPurchaseValueInput" class="form-input" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estimasi Nilai Saat Ini (Rp)</label>
+            <input type="text" id="assetCurrentValueInput" class="form-input" placeholder="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan / Keterangan</label>
+          <input type="text" id="assetNotesInput" class="form-input" placeholder="Sertifikat SHM, BPKB...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Aset</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 3. Debt Modal -->
+<div class="modal-backdrop" id="debtModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="debtModalTitle">Catat Hutang Pribadi</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="debtForm" onsubmit="DebtsModule.saveFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="dbtEditId">
+
+        <div class="form-group">
+          <label class="form-label">Kreditor / Sumber Pinjaman</label>
+          <input type="text" id="dbtCreditorInput" class="form-input" placeholder="KPR Mandiri, Cicilan Mobil BCA, Kartu Kredit" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Jenis Hutang</label>
+          <select id="dbtCategorySelect" class="form-select">
+            <option value="Jangka Pendek">Hutang Jangka Pendek (&lt; 1 Thn: Kartu Kredit, Paylater)</option>
+            <option value="Jangka Panjang">Hutang Jangka Panjang (&gt; 1 Thn: KPR, Cicilan Kendaraan)</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Total Plafon Pinjaman (Rp)</label>
+            <input type="text" id="dbtTotalLoanInput" class="form-input" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sisa Pokok Hutang (Rp)</label>
+            <input type="text" id="dbtRemainingInput" class="form-input" placeholder="0" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+          <div class="form-group">
+            <label class="form-label">Bunga (%/thn)</label>
+            <input type="number" id="dbtInterestInput" class="form-input" value="0" step="0.1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cicilan /bln (Rp)</label>
+            <input type="text" id="dbtMonthlyPaymentInput" class="form-input" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jatuh Tempo (Tgl)</label>
+            <input type="number" id="dbtDueDayInput" class="form-input" min="1" max="31" value="10">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan Tenor</label>
+          <input type="text" id="dbtNotesInput" class="form-input" placeholder="Sisa 12 bulan...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Hutang</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 4. Reminder Modal -->
+<div class="modal-backdrop" id="reminderModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="remModalTitle">Tambah Reminder Tagihan</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="reminderForm" onsubmit="RemindersModule.saveFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="remEditId">
+
+        <div class="form-group">
+          <label class="form-label">Nama Tagihan yang Harus Dibayar</label>
+          <input type="text" id="remTitleInput" class="form-input" placeholder="Listrik PLN, WiFi Indihome, BPJS, Cicilan Motor" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Nominal (Rp)</label>
+            <input type="text" id="remAmountInput" class="form-input" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Jatuh Tempo</label>
+            <input type="date" id="remDueDateInput" class="form-input" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Frekuensi</label>
+            <select id="remFrequencySelect" class="form-select">
+              <option value="monthly">Bulanan (Auto-ulang tiap bulan)</option>
+              <option value="weekly">Mingguan</option>
+              <option value="yearly">Tahunan</option>
+              <option value="once">Sekali Bayar</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kategori</label>
+            <select id="remCategorySelect" class="form-select"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Rekening Pembayaran</label>
+          <select id="remAccountSelect" class="form-select"></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan / ID Pelanggan</label>
+          <input type="text" id="remNotesInput" class="form-input" placeholder="No. Pelanggan...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Pengingat</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 5. Savings Goal Modal -->
+<div class="modal-backdrop" id="goalModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title">Buat Target Tabungan</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="goalForm" onsubmit="CalculatorModule.saveGoalFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="goalEditId">
+
+        <div class="form-group">
+          <label class="form-label">Nama Target Impian</label>
+          <input type="text" id="goalModalTitleInput" class="form-input" placeholder="DP Rumah, Liburan, Dana Darurat" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Target Nominal (Rp)</label>
+            <input type="text" id="goalModalTarget" class="form-input" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Saldo Awal (Rp)</label>
+            <input type="text" id="goalModalCurrent" class="form-input" placeholder="0">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Batas Waktu (Deadline)</label>
+            <input type="date" id="goalModalDeadline" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategori</label>
+            <input type="text" id="goalModalCategory" class="form-input" value="Tabungan Impian">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Target</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 6. Account Modal (Tambah / Edit Akun Bank & Debet) -->
+<div class="modal-backdrop" id="accountModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" id="accModalTitle">Tambah Akun Simpanan / Debet Baru</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="accountForm" onsubmit="AccountsModule.saveAccountFromModal(event)">
+      <div class="modal-body">
+        <input type="hidden" id="accEditId">
+
+        <!-- Quick Presets -->
+        <div class="form-group">
+          <label class="form-label">Pilih Preset Cepat Bank & E-Wallet</label>
+          <div id="accountPresetsContainer" style="display: flex; gap: 0.35rem; flex-wrap: wrap;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nama Akun / Bank</label>
+          <input type="text" id="accNameInput" class="form-input" placeholder="Contoh: Bank BRI, Bank BNI, Mandiri, BCA..." required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Jenis Akun</label>
+            <select id="accTypeSelect" class="form-select">
+              <option value="bank">Bank / Rekening Debet</option>
+              <option value="ewallet">E-Wallet / Dompet Digital</option>
+              <option value="cash">Dompet Tunai / Cash</option>
+              <option value="investment">Investasi / Pasar Modal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening / No. HP</label>
+            <input type="text" id="accNumberInput" class="form-input" placeholder="Opsional">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Saldo Awal Saat Ini (Rp)</label>
+            <input type="text" id="accInitialBalanceInput" class="form-input" placeholder="0" style="font-weight: 700;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Warna Identitas</label>
+            <input type="color" id="accColorInput" class="form-input" value="#00529C" style="height: 40px; padding: 2px 4px; cursor: pointer;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Akun</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 7. Transfer Antar Akun Modal -->
+<div class="modal-backdrop" id="transferModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title">Pindah Dana / Transfer Antar Akun</div>
+      <button class="btn btn-secondary btn-icon" data-close-modal>
+        <span data-icon="x" data-icon-class="w-4 h-4"></span>
+      </button>
+    </div>
+    <form id="transferForm" onsubmit="AccountsModule.saveTransferFromModal(event)">
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Dari Rekening (Asal)</label>
+            <select id="transferFromSelect" class="form-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ke Rekening (Tujuan)</label>
+            <select id="transferToSelect" class="form-select"></select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Nominal Transfer (Rp)</label>
+            <input type="text" id="transferAmountInput" class="form-input" placeholder="0" required style="font-weight: 800; font-size: 1.15rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal</label>
+            <input type="date" id="transferDateInput" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catatan / Keterangan (Opsional)</label>
+          <input type="text" id="transferNotesInput" class="form-input" placeholder="Tarik tunai ATM, top up e-wallet, dll...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Kirim Transfer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="js/icons.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/accounts.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/debts.js"></script>
+<script src="js/balance_sheet.js"></script>
+<script src="js/reminders.js"></script>
+<script src="js/calculator.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
